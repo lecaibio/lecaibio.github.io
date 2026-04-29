@@ -2,3 +2,9 @@ title: Le Cai
 tagline: Bio + AI, Clinical ML, Infrastructure
 theme: minima
 repository: lecaibio/lecaibio.github.io
+exclude:
+  - DEVELOPMENT.md
+  - Gemfile
+  - Gemfile.lock
+  - vendor/
+  - .github/
