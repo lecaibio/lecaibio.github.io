@@ -1,4 +1,8 @@
-# From Shared Hosting to Zero Trust
+---
+layout: post
+title: "From Shared Hosting to Zero Trust"
+date: 2026-04-29 02:00:00 -0700
+---
 
 The phone wakes me before my brain does. 99+ on the messaging app icon. I haven't even unlocked the screen but I already know. Pull on whatever clothes I find, open the laptop on the dining table, hit the URL. 502. Refresh. 503. Refresh. 502 again. The error code keeps flipping between the load balancer telling me the backend is gone and the backend telling me it's overwhelmed, and I haven't even finished waking up.
 
