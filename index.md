@@ -12,7 +12,3 @@ Always up for a Bay Area coffee chat. Reach out if anything here resonates.
 
 **LinkedIn**: [linkedin.com/in/le-cai-60962011a/](https://linkedin.com/in/le-cai-60962011a/)  
 **Email**: lecai@alumni.stanford.edu
-
----
-
-## Writing
