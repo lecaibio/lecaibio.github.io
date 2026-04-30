@@ -125,6 +125,8 @@ I did not plan to become that person. I'm glad I am.
 
 <small>
 **A note on this piece**
+<br>
 The three eras are a narrative scaffold; in reality the categories of struggle overlapped and looped. AI helped me organize the writing; the judgments and scars are mine.
+<br>
 The views and experiences here are my own. The system described is a personal side project, not affiliated with any employer or organization.
 </small>
