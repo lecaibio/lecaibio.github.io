@@ -7,9 +7,11 @@ date: 2026-04-29 02:00:00 -0700
 The phone wakes me before my brain does. 99+ on the messaging app icon. I haven't even unlocked the screen but I already know. Pull on whatever clothes I find, open the laptop on the dining table, hit the URL. 502. Refresh. 503. Refresh. 502 again. The error code keeps flipping between the load balancer telling me the backend is gone and the backend telling me it's overwhelmed, and I haven't even finished waking up.
 
 Some hours later, feet feeling cold, problem traced back to a read replica that had drifted far enough behind the primary that the application was stuck retrying for data it had just written, fix deployed, dashboard quiet. I sit there staring at the fridge door and think: I never planned to do this.
+<br><br>
 
 ---
 
+<br><br>
 This is a side project. A community platform I built and have been keeping alive on my own time, separate from my day job, which has nothing to do with backend engineering. There are tens of thousands of people who use it daily. There is no on-call rotation. There is no DevOps team. There is just me, the AWS console, and a long enough memory of past incidents to know that the next one is always one deploy away.
 
 What I want to write here isn't a tutorial. It's the path I actually walked: what I built, what broke it, what I learned, and what I deliberately chose not to do. If you're starting out with AWS and trying to figure out where the next step is, this is the map I wish someone had drawn for me.
@@ -40,21 +42,27 @@ For me, most of it was reads. Read/write splitting at the database layer was the
 
 That last sentence sounds easier than it is. Some "reads" wear the shape of writes, in the sense that they cannot tolerate stale data: a balance shown right after a deduction, a moderation status checked right after an update, anything where the user just did something and the next page expects to reflect it. Routing those to a replica that is milliseconds behind reality produces bugs that are very hard to reproduce. I learned this by routing the wrong things. The rule I eventually settled on: if the cost of seeing slightly stale data is unacceptable for that path, the query goes to the primary, regardless of whether the call technically reads.
 
-Replicas didn't fix the fact that the same expensive query was running against the database hundreds of times for data that almost never changed. That is what introduced a cache layer in front of the database. Hot reads now hit Redis. The database stopped being asked the same questions over and over. My first cache configuration shipped with the wrong eviction policy, which silently started rejecting writes once memory filled, and the application happily read stale or missing values for a while before I noticed. Caches reward attention to defaults.
+Replicas didn't fix the fact that the same expensive query was running against the database hundreds of times for data that almost never changed. That is what introduced a cache layer in front of the database. Hot reads now hit Redis. The database stopped being asked the same questions over and over.
 
 Around the same time, I noticed certain operations had no business being on the request path at all. Sending emails, complex statistics calculations, corrections to historical data. Anything where the user did not need an immediate answer. These moved into a queue, with worker processes pulling jobs off of it on their own schedule. The request returns instantly; the work happens in the background.
 
 Background work has its own discipline. A heavy batch that looks like a free win on the request path can flood writes faster than the replica can keep up, or land on top of the nightly RDS backup window and turn a routine job into a noisy incident. Heavy jobs need to be paced, staggered, and aware of when your backups run. "Async" is not the same as "free."
 
-By the time both of these were in place, the same Redis instance was simultaneously a cache, a session store, and a queue broker, sharing memory across three completely different durability profiles. Cache is fungible: losing it costs latency. Sessions, if you lose them, log everyone out. The queue holds work that has not happened yet: losing it means dropping things users had already paid attention to. So the single Redis became three nodes. Three responsibilities, three durability profiles, three failure modes.
+By the time both of these were in place, the same Redis instance was simultaneously a cache, a session store, and a queue broker, three roles with completely different durability profiles sharing one bucket of memory. The failure that eventually surfaced this was not the one I had been bracing for.
 
-Much later in this era, when database connections themselves became the bottleneck (workers spawning enough at peak that the database ran out of room to think), I added an RDS Proxy in front of the primary. It pools a fixed number of real connections and multiplexes the application's short ones over them. It helped, but less than I had hoped, because AWS does not currently allow RDS Proxy in front of MySQL read replicas. The write side gets pooled. The read side, which is most of the traffic, does not. I have not yet found a workaround I am happy with.
+The obvious worry about sessions is that losing them logs everyone out. In practice, my users did not mind getting logged out, and I did not store anything in sessions that mattered if it disappeared. What users did mind was being unable to log in at all. When session count grew without a tight enough lifetime, Redis filled up, and the eviction policy I had configured refused new writes, including new sessions. New users hit the site and bounced off because the system would not accept their session. The diagnosis took longer than it should have, because my instinct was to look for what had been lost, not for what could no longer be created.
+
+The fix had two parts: shorten session lifetime so sessions expired before memory pressure built, and physically separate sessions onto their own Redis node so cache pressure could not crowd them out. The single Redis became three nodes. If I had to rank what matters most among the three, the queue is the one I would protect first. Cache is fungible. Sessions, in my context, are tolerable to lose. The queue holds work users have already triggered, and those are the failures they actually remember.
+
+Much later in this era, when database connections themselves became the bottleneck (servers spawning enough at peak that the database ran out of room to think), I added an RDS Proxy in front of the primary. It pools a fixed number of real connections and multiplexes the application's short ones over them. It helped, but less than I had hoped, because AWS does not currently allow RDS Proxy in front of MySQL read replicas. The write side gets pooled. The read side, which is most of the traffic, does not. I have not yet found a workaround I am happy with.
 
 Email was its own small saga. Outbound mail from a community platform turns out to be harder than it looks. Deliverability rules are strict, free providers throttle, and at one point I was rotating through ten different Google accounts as senders. That setup was every bit as fragile as it sounds. I eventually moved to AWS's own email service and started paying for it directly. It cost less than I had been afraid of, ran without my supervision, and stopped being on my mind. Some lessons are "pay the company that does this for a living and move on."
 
-Around this period I also added a CDN in front of the load balancer, a web application firewall on top of that, and started using a log search service instead of grepping local files. The WAF earned its keep more times than I expected. It blocked several DDoS waves before they reached my origin, and it caught a steady stream of injection attempts at the application layer that would otherwise have hit the database.
+Around this period I also added a CDN in front of the load balancer, a web application firewall on top of that, and started using a log search service instead of grepping local files. The WAF earned its keep more times than I expected. It blocked several DDoS waves before they reached my origin, and it taught me there are far more random bots probing the open internet than I had ever imagined.
 
-The search field was its own lesson, separate from the WAF. In the early days, users started getting creative with wildcard characters to do fuzzier searches than the original implementation had anticipated. None of those queries were malicious, but they made the shape of the risk obvious: any place where user input directly shapes a database query is a place an attacker is going to lean on, eventually. I tightened the input handling. I have since spent some genuinely fun hours tracing the patterns left behind by attackers who tried anyway. Those are stories for another time.
+The search field was its own lesson, separate from the WAF. In the early days, users started getting creative with wildcard characters to do fuzzier searches than the original implementation had anticipated. None of those queries were malicious, but they made the shape of the risk obvious: any place where user input directly shapes a database query is a place an attacker is going to lean on, eventually. I tightened the input handling.
+
+Beyond search, attackers leave traces all over a system you watch carefully enough. Across the years I have spent some genuinely fun hours triangulating individuals from the patterns they leave behind in logs. Those are stories for another time.
 
 I tried alarms in this era and got it wrong. I set too many. Every minor blip woke me up. I couldn't tell which alerts mattered, and the ones that did got buried under the ones that didn't. I eventually turned most of them off, which was also wrong, but in a different direction. I'm still learning the shape of "alert only on what users actually feel," graduated tiers, dashboards for the rest. Solo on-call is a design problem, not a stamina problem, and treating it like stamina is how you burn out.
 
@@ -111,3 +119,12 @@ Security, eventually, stops feeling like a checklist and starts feeling like asy
 Operating a real system on your own, for years, is not glamorous. It is mostly small decisions that no one will ever see, made on weeknights, after a long day of doing something else. But there is a particular kind of confidence that comes from having held the same system together long enough that you remember every reason you have for the choices in it. That confidence isn't transferrable from a course or a certification. You have to earn it by being the person whose phone goes off at 3 a.m.
 
 I did not plan to become that person. I'm glad I am.
+<br><br>
+
+---
+
+<small>
+**A note on this piece**
+The three eras are a narrative scaffold; in reality the categories of struggle overlapped and looped. AI helped me organize the writing; the judgments and scars are mine.
+The views and experiences here are my own. The system described is a personal side project, not affiliated with any employer or organization.
+</small>
