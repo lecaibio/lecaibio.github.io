@@ -11,4 +11,7 @@ Talk to me about: clinical ML pipelines, synthetic EHR, agentic workflows for he
 Always up for a Bay Area coffee chat. Reach out if anything here resonates.
 
 **LinkedIn**: [linkedin.com/in/le-cai-60962011a/](https://linkedin.com/in/le-cai-60962011a/)  
+**Github**: [github.com/lecaibio](https://github.com/lecaibio)  
 **Email**: lecai@alumni.stanford.edu
+
+<br>
