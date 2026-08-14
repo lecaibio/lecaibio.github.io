@@ -72,7 +72,7 @@ No course covers this, and it is where scientific training actually helps.
 - Split discipline in a scientific setting. The unit of independence is almost never the row. It is the patient, the subject, the batch, the cell line, the site, or the time point. Random `train_test_split` on the row is the single most common way biological ML goes wrong.
 - Metric choice: AUROC versus AUPRC under class imbalance, sensitivity and specificity at a chosen operating point, calibration. Accuracy is nearly always the wrong headline number.
 - Cross-validation done properly, including nested cross-validation when you are also selecting features or tuning hyperparameters. If model selection happens inside the same loop that reports performance, the reported number is optimistic and you cannot say by how much.
-- Baselines. Always report what a trivial model gets: majority class, one strong clinical covariate, or a logistic regression on age and sex. Age and sex predict a lot of clinical outcomes on their own, so a paper reporting AUROC 0.78 from a complex model has told you nothing if age and sex alone would have given 0.75. Most papers do not report that comparison, which means you cannot tell.
+- Baselines. Always report what a trivial model gets: majority class, one strong clinical covariate, or a logistic regression on age and sex. Age and sex predict a lot of clinical outcomes on their own, so a paper reporting AUROC 0.78 from a complex model has told you nothing if age and sex alone would have given 0.75.
 - Variability across folds and seeds. A single number with no spread is not a result.
 - Batch effects and confounding as a modeling problem, not just a preprocessing problem. If the cases were run in one batch and the controls in another, your classifier is a batch detector.
 
@@ -83,7 +83,7 @@ No course covers this, and it is where scientific training actually helps.
 
 ### Do this alongside, not after
 
-Deliberately build a leaking model. Take a dataset you know well, engineer a leak into it on purpose, get a suspiciously high AUROC, then remove it and watch the number collapse.
+**Your first model is almost certainly wrong**, in some way. A model that works is not the same as a model that is right, and this is where ML differs from most code. Broken code fails visibly. So before you improve a result, deliberately build a leaking model. Take a dataset you know well, engineer a leak into it on purpose, get a suspiciously high AUROC, then remove it and watch the number collapse.
 
 Do it once on purpose and you will recognize it later. Otherwise you meet it by accident, six months in, after presenting the result.
 
@@ -147,7 +147,7 @@ For most tabular clinical and omics problems at typical biological data scale, g
 
 **The mode you will actually work in** is adapting and fine-tuning existing architectures, not training from scratch. Load a pretrained model, freeze parts of it, replace the head, fine-tune. On a new modality, start by using a pretrained model's embeddings as features and decide afterward whether fine-tuning is worth it.
 
-**Domain models worth knowing exist:** ESM and AlphaFold for proteins; scGPT and Geneformer for single cell, benchmarked against a simple baseline before you believe any of it; TabPFN for small tabular data, which changes what is worth attempting on a few-hundred-sample clinical dataset; Cellpose and the SAM family for microscopy.
+**Domain models worth knowing exist:** ESM and AlphaFold for proteins; scGPT and Geneformer for single cell, benchmarked against a simple baseline before you believe any of it; TabPFN surprisingly well for small tabular data, which changes what is worth attempting on a few-hundred-sample clinical dataset.
 
 → **You'll be able to:** tell when a problem needs deep learning and when it doesn't, and use a pretrained model as a feature extractor without training anything.
 
@@ -157,16 +157,21 @@ For most tabular clinical and omics problems at typical biological data scale, g
 
 The bottleneck in applying these systems to biology is domain judgment, not model engineering, which is why a biologist can become useful here quickly.
 
-### 5.1 What you actually need to know
+**First, get out of the chat window.** Think about the last time you used a chatbot. When it searched the web, ran code, read a file you uploaded, or picked up something you said twenty minutes earlier, none of that was the model. Those were pieces built around it. What you were using was already an agentic workflow, which is the thing this block is about building, and you cannot build one while it still looks like a single object.
+
+A bare LLM is text in, text out. Nothing else. It does not open your files. It does not make you a slide deck. It does not remember yesterday. Everything beyond the string it returns was assembled by someone.
+
+If you have never made an LLM API call, or don't know what I mean, I have something for you here: [cabs-workshop-llm-agents](https://github.com/lecaibio/cabs-workshop-llm-agents**). It has a Colab notebook ready to run and instructions for getting a free Gemini API key, no credit card. As of August 2026 the free tier covers it. Send a string, get one back, and you have seen the entire backbone. Everything below is something wrapped around that call.
+
+### 5.1 The knobs that matter
 
 You do not need to know how transformers work internally. You do need:
 
 - Tokens, context windows, and what happens when you exceed them.
 - Temperature, and why you set it to zero for extraction and not for drafting.
 - Structured output: asking for JSON against a fixed schema. Real pipeline work depends on getting reliable structured output, not prose.
-- Batching. One call per row is slow and expensive; too many records in one call and the quality drops. Find the batch size that holds up for your task and keep it fixed.
+- Batching. One call per row is slow and expensive; too many records in one call and quality drops. Find the batch size that holds up for your task and keep it fixed.
 - **Save every raw response.** The same input gives a different answer next time, so a result you did not store is one you cannot reproduce, re-check, or diff against a later run. Write responses to disk before you parse them.
-- Embeddings, and how they differ from a generative model.
 - When fine-tuning is worth it, which is less often than people assume. Prompting, retrieval, and better data usually beat it for knowledge tasks. Fine-tune for format, style, and narrow classification.
 - Prompts as versioned artifacts. Keep them in files, in git, with a small evaluation set.
 
@@ -176,29 +181,36 @@ Describe the task, the input, and the output format you want, and ask the model 
 
 Same for schemas, test cases, and the first version of an evaluation set.
 
-### 5.3 Retrieval, if you need it
+### 5.3 Giving it what it does not know
 
-Split documents into chunks, embed them, search, pass what comes back to the model.
+Retrieval, if you need it. Split documents into chunks, embed them, search, pass what comes back to the model.
 
-Retrieval sets the ceiling. If the right passage is never retrieved, the model cannot recover, so check that step on its own before judging the answer. For scientific work the system also has to show which passage it used.
+Retrieval sets the ceiling. If the right passage is never retrieved, the model cannot recover, so check that step on its own before judging the answer. For scientific work the system also has to point at the passage it used, not just the document.
 
-### 5.4 The ladder, and staying low on it
+### 5.4 Tools first, then autonomy
 
-1. **Single call.** One prompt, one response. Most tasks stop here.
-2. **Chain.** Fixed sequence of calls, deterministic order.
-3. **Router.** One classification step chooses among fixed branches.
-4. **Tool-using agent.** The model decides which tools to call and when, in a loop.
-5. **Multi-agent.** Several specialized agents coordinating.
+Two separate questions, and it helps to keep them apart.
 
-Every rung up buys flexibility and pays for it in nondeterminism, cost, latency, and debugging difficulty. The common mistake is building rung 4 or 5 for a problem that rung 2 solves. **Use the least agentic thing that works.**
+**What does it need to be able to do?** That is tools: a function that queries an API, runs a search, reads a file, executes a query against your database. This is where most of the work is and where most of the value sits. A function that pulls from ClinicalTrials.gov and returns clean structured records is useful whether or not a model ever calls it. Build the tool and test it on its own, before any model is involved.
 
-**Build the raw loop before you touch a framework.** Define a tool schema, send it, receive a tool call, execute it, return the result, repeat until the model stops. It is about eighty lines. After that, frameworks are conveniences rather than magic, and you can debug them.
+**Who decides when to use it?** This is what people mean by "agentic," and it is a dial rather than a sequence of stages:
+
+1. **You decide, in code.** One call, or a fixed order of them. If a tool is needed, your code calls it. Most tasks stop here.
+2. **One branch.** A classification step picks among fixed paths, then fixed code again.
+3. **Tool-using agent.** You send the tool descriptions along with the prompt. The model replies with a request to call one, arguments filled in. Your code runs it, returns the result, and the model either calls another or answers. You wrote the tools; you did not write the order.
+4. **Multi-agent.** Several specialized agents coordinating, each with its own tools.
+
+Turning the dial up buys flexibility and pays for it in nondeterminism, cost, latency, and debugging difficulty. **Use the least autonomy that works.** The common mistake is reaching for 3 or 4 on a task whose order you already knew.
+
+The two axes are independent. A fixed chain calling four tools is a real system. So is a retrieval pipeline calling none. Tool count is not autonomy.
+
+**Build a tool-using agent yourself once, before you touch a framework.** Define a tool schema, send it with the prompt, receive a tool call, execute it, return the result, repeat until the model stops. It is about eighty lines, and it is the chatbot from the intro, rebuilt. After that, frameworks are conveniences rather than magic.
 
 ### 5.5 LangGraph
 
-Worth learning because it makes the workflow an explicit graph rather than an open-ended agent loop, so you can see what ran and in what order. The parts that matter: the state object you thread through it, branching on that state, checkpointing so a long run can pause and resume, and an interrupt step when something needs human approval before it proceeds. Run a tracing tool alongside it.
+Worth learning because it makes the workflow an explicit graph rather than an open-ended loop, so you can see what ran and in what order. The parts that matter: the state object you thread through it, branching on that state, checkpointing so a long run can pause and resume, and an interrupt step when something needs human approval before it proceeds. Run a tracing tool alongside it.
 
-Alternatives keep appearing, and any of them will do. What transfers between them is the ladder above and the state design.
+Alternatives keep appearing. What transfers between them is the ladder above and the state design.
 
 ### 5.6 Evaluating what you build
 
@@ -216,9 +228,7 @@ Keep a fixed set of inputs with known correct outputs, however small. Track cost
 
 The pattern: a human currently reads unstructured material and produces structured judgment, in volume, and errors are visible when they happen. Where errors are invisible, do not build this.
 
-→ **You'll be able to:** build a tool-using workflow, explain why it sits at the rung you chose, and show the trace when it fails.
-
----
+## → **You'll be able to:** build a tool-using workflow, explain why it sits at the rung you chose, and show the trace when it fails.
 
 ## Block 6: Working in controlled and offline environments
 
