@@ -262,10 +262,10 @@ Run the pipeline once with networking disabled before you deploy it. It takes se
 
 Run alongside everything else.
 
-- conda: creating, exporting, transferring environments, and why `environment.yml` needs pinned versions.
+- conda: creating environments and moving them between machines. conda-pack bundles one into a transferable archive, which is the option that works when the environment has non-Python binaries in it. Pin versions.
 - Model freezing, weight import and export, artifact versioning.
 - Enough Docker to build an image, run a container, mount a volume.
-- Experiment tracking: MLflow or Weights & Biases. A CSV of parameters and results beats memory.
+- Track your runs in a table. Date, what you changed (parameters), the metric number you got. A week later you will not remember which version produced the result in your slide. MLflow automate this.
 - Tests for data-loading and preprocessing functions. That is where the silent errors live.
 - One cloud platform, whichever your organization uses. Object storage, managed notebooks, training jobs, model endpoints, secrets, and access control are common to all of them. Learn those six and the vendor becomes a documentation problem.
 
