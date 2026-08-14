@@ -22,7 +22,7 @@ What you need:
 
 - Python basics, then **pandas and numpy**. Most of your time will be spent here, not in model code.
 - **Command line**: enough to move around a filesystem, look at the contents of a file, and check what a running job is actually using.
-- **Google Colab**: free, no setup, free GPU. Open a notebook, run cells, switch the runtime to GPU, get a CSV in. Know that the runtime resets and takes your files with it.
+- [**Google Colab**](https://colab.research.google.com/): free, no setup, free GPU. Open a notebook, run cells, switch the runtime to GPU, get a CSV in. Know that the runtime resets and takes your files with it.
 
 If you are missing all of this, do not spend a month on it before starting Block 1. A beginner ML course will teach you the Python you need as you go, and you will learn it faster when it is attached to something you want to build.
 
@@ -50,19 +50,13 @@ Any intro to ML course from the last three years will do. The specific course ma
 
 **If you have no basis for choosing, take this one:** [Machine Learning Specialization (Stanford Online / DeepLearning.AI, Andrew Ng)](https://www.coursera.org/specializations/machine-learning-introduction). No prerequisites beyond high school math, and it teaches the Python you need as it goes.
 
-- Course 1, Supervised Learning (33 hrs)
-- Course 2, Advanced Learning Algorithms: neural networks, decision trees, tree ensembles, ML best practices (34 hrs). The most useful of the three for biological work.
-- Course 3, Unsupervised, Recommenders, RL (28 hrs). Lower priority. Clustering and anomaly detection are relevant; the rest less so.
-
-Others that work: Google's Machine Learning Crash Course, fast.ai _Practical Deep Learning for Coders_, the scikit-learn user guide.
-
 ### Do this alongside, not after
 
-Every week, take the concept you just learned and run it on a small tabular dataset of your own, in Colab, with scikit-learn. Block 3 covers where to get one.
+Every week, take the concept you just learned and run it on a small tabular dataset of your own, in Colab, with scikit-learn. Block 3 covers where to get the data.
 
-The point is not the models. The point is the reflex of loading data, splitting it, fitting, and scoring without looking anything up. Course exercises come with the data already loaded and the problem already framed, which is exactly the part that is hard in real work.
+The point is not the models. The point is the reflex of loading data, splitting it, fitting, and scoring without looking anything up. Course exercises come with the data already loaded and the problem already framed, which is different from real work.
 
-Keep these in one repository as you go. By the end you have a dozen small working examples to steal from, which is worth more than notes.
+Keep these in one repository as you go. When you want to try a different setting, copy the cell and change the copy rather than editing in place. By the end you have a dozen small working examples.
 
 → **You'll be able to:** build a baseline model on a new biological dataset and explain why you chose it.
 
@@ -120,7 +114,7 @@ Before you pick from the list below, describe your question to ChatGPT, Claude, 
 De-identified ICU and hospital records. Requires CITI training and a signed data use agreement, so apply a few weeks early. The trap is treatment leakage: mortality is easy to predict if vasopressors and comfort-care orders are in your feature window.
 
 **ClinicalTrials.gov and AACT** · https://clinicaltrials.gov · https://aact.ctti-clinicaltrials.org
-The global trial registry. AACT is the same content as a relational database and is much easier to query. Better for text and LLM work than for prediction. The trap is that registry entries are self-reported and often incomplete.
+The global trial registry. AACT is the same content as a relational database and is much easier to query. The trap is that registry entries are self-reported and often incomplete.
 
 **DepMap / CCLE** · https://depmap.org
 Cancer cell line genomics plus dependency screens and drug sensitivity. Many more features than samples. The trap is lineage: a model predicting drug response can score well by learning tissue type instead of biology. Hold out whole lineages and watch it fall.
@@ -281,4 +275,4 @@ For a structured version: MLOps (Machine Learning Operations Specialization, Duk
 
 ---
 
-Thanks to Yifeng Liang, Lengxi Huang, and Karen Wong, who I met through the CABS summer intern program. A lot of this document came out of talking with them. Their questions made me organize thinking I had been carrying loosely, and several of their ideas changed how I see the sequence. Teaching turned out to be its own form of learning. None of them started with the Coursera course. Each took a real dataset and worked a project through over the summer, picking up the pieces as they needed them. That is a different order than the one written here, but it works out great.
+Thanks to Yifeng Liang, Lengxi Huang, and Karen Wong, who I met through the [CABS summer intern program](https://ds4cabs.github.io). A lot of this document came out of talking with them. Their questions made me organize thinking I had been carrying loosely, and several of their ideas changed how I see the sequence. Teaching turned out to be its own form of learning. None of them started with the Coursera course. Each took a real dataset and worked a project through over the summer, picking up the pieces as they needed them. That is a different order than the one written here, but it works out great.
