@@ -10,7 +10,7 @@ layout: post
 
 **Who this is not for:** the "can an agent book my flights and organize my calendar" version of AI. Those tools exist and you do not need this document to find them. Same answer if you already work in industry and desperately want something for a task you do every day: buy it. Pay for Claude or ChatGPT, or ask your manager for a Microsoft Copilot license. Building your own takes six months and it will almost certainly be worse than what you can buy today. But if you want to be the person who eventually builds that kind of tool, this one is for you.
 
-**Block 1 is optional.** Not everyone learns from lectures, and some people already have the coursework. If that is you, start at Block 3, pick a dataset, and come back to the earlier blocks when you get stuck.
+**Block 1 is optional.** Not everyone learns from lectures, and some people already have the coursework. <u>If that is you, start at Block 3, pick a dataset, and come back to the earlier blocks when you get stuck.</u>
 
 This is the sequence that worked for me, not a curriculum. I am still working through parts of it myself.
 
@@ -102,13 +102,13 @@ This is also where people who skipped Block 1 should start. You will be looking 
 
 ### Is it actually an ML question?
 
-Near the end of a first ML course a thought arrives, and it is a reasonable one. You have twenty measurements per sample and you have only ever looked at them one at a time. A model uses all twenty at once. Surely that is where the biomarker is.
+Near the end of a first ML course a reasonable thought arrives. You have twenty measurements per sample and have only ever looked at them one at a time. A model uses all twenty at once. Surely that is where the biomarker is.
 
-Sometimes. But check what you are asking first. ML predicts Y for a new sample. Statistics estimates whether X affects Y and by how much. Most biology experiments ask the second one, and for those a linear model with proper multiple testing wins, because it gives you an effect size and an interval. A classifier gives you an accuracy number, which does not tell you what changed.
+Sometimes. But ML predicts Y for a new sample, while statistics estimates whether X affects Y and by how much. Most biology experiments ask the second, and a linear model with proper multiple testing answers it better, because it gives you an effect size and an interval instead of an accuracy number.
 
-Then check the sample size, meaning independent units and not rows. Six mice per group is six, however many transcripts you measured on each. At that size a model will find something. It will also find something after you shuffle the labels, and telling those apart is what you cannot do at n=12.
+Then count independent units, not rows. Six mice per group is six, however many transcripts you measured on each. At that size a model will find something. It will also find something after you shuffle the labels.
 
-So learn on public data, where sample size is someone else's problem, and bring your own experiment back when you have a prediction question and the units to check the answer. Knowing the boring method wins here is the same judgment as knowing when it doesn't.
+Learn on public data, where sample size is someone else's problem. Knowing the boring method wins here is the same judgment as knowing when it doesn't.
 
 ### Start here: NHANES
 
@@ -300,8 +300,14 @@ For a structured version: MLOps (Machine Learning Operations Specialization, Duk
 
 → **You'll be able to:** hand someone your analysis and have it run on their machine.
 
+<br><br>
+
 ---
 
+<small>
+**A note on this piece**
+<br>
 Thanks to Yifeng Liang, Lengxi Huang, and Karen Wong, who I met through the [CABS summer intern program](https://ds4cabs.github.io). A lot of this document came out of talking with them. Their questions made me organize thinking I had been carrying loosely, and several of their ideas changed how I see the sequence. Teaching turned out to be its own form of learning. None of them started with the Coursera course, because all three already had intro ML and Python coursework behind them. Each took a real dataset and worked a project through over the summer, picking up the pieces as they needed them. That is Block 1 skipped for the right reason, and it works out great.
-
+<br>
 Thanks also to Shucheng Cao, from the same program, who came to this with the ML already behind him and went down the list to find Block 6 was his only blank. That question is why the block now says which half of it you can learn without the job.
+</small>
