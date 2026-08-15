@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="stroke" x1="12" y1="92" x2="88" y2="10" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#aee39b"/>
+      <stop offset="1" stop-color="#6a93f2"/>
+    </linearGradient>
+    <linearGradient id="bg" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#17253e"/>
+      <stop offset="1" stop-color="#0d1424"/>
+    </linearGradient>
+  </defs>
+
+  <!-- background stays outside the group, so it always fills the frame -->
+  <rect width="100" height="100" rx="22" fill="url(#bg)"/>
+
+  <!-- The drawn mark spans x 14.6..92, y 6.7..94.5, so its own centre is (53.3, 50.6), which
+       sat right of the frame centre. Scale about that centre, then put the centre at (50,50).
+       Margins then come out even: 15.2 left and right, 10.5 top and bottom. Nudge the 0.9 to
+       resize, or the first translate to reposition. Nothing else needs touching.
+       (No double hyphens in here: XML comments forbid them and the file stops parsing.) -->
+  <g transform="translate(50,50) scale(0.9) translate(-53.3,-50.6)">
+    <path d="M20.0,91.0 L34.5,72.5
+             M34.5,72.5 L23.0,40.0
+             M23.0,40.0 L54.5,15.5
+             M54.5,15.5 L56.5,51.0
+             M56.5,51.0 L34.5,72.5
+             M56.5,51.0 Q72.0,47.0 84.0,31.0
+             M32.0,78.5 Q56.0,79.5 77.5,73.0"
+          fill="none" stroke="url(#stroke)" stroke-width="7.0"
+          stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="23.0" cy="40.0" r="8.4" fill="#7fd8c0"/>
+    <circle cx="54.5" cy="15.5" r="8.8" fill="#6e9bf2"/>
+    <circle cx="77.5" cy="73.0" r="8.0" fill="#5f7fec"/>
+    <circle cx="84.0" cy="31.0" r="8.0" fill="#f2918c"/>
+  </g>
+</svg>

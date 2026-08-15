@@ -89,6 +89,39 @@ layout: post
 ![描述](/assets/images/filename.png)
 ```
 
+一篇文章的图放同一个子目录，用文章的短名，例如
+`/assets/images/clinical_field_notes/01-three-rates.png`。SVG 跟 PNG 一样用 `![]()` 引用，
+Jekyll 不需要额外配置。
+
+### 文末 note 格式
+
+每篇文章结尾用同一个块。**照抄这个结构**，不要换成普通段落或 `>` 引用：
+
+```markdown
+<br><br>
+
+---
+
+<small>
+**A note on this piece**
+<br>
+第一段。
+<br>
+第二段。
+</small>
+```
+
+要点：
+
+- `<br><br>` 空开，然后 `---` 分隔线，然后整块包在 `<small>` 里
+- 标题固定是 **A note on this piece**，加粗，单独一行
+- 段落之间用单个 `<br>`，不要空行分段（`<small>` 块里 markdown 的段落解析不可靠）
+- **块内的链接要用 `<a href="...">` HTML 写法**，不要用 `[]()`。kramdown 在 `<small>` 里
+  不保证解析 markdown 链接
+
+这个块放什么：致谢、数据和代码出处、方法上的免责（比如"未加权"、"这个结论是推理不是实验"）、
+AI 协助声明、以及跟雇主无关的声明。正文里不写这些，全部收到文末。
+
 ## Repo 结构
 
 ```
@@ -117,6 +150,26 @@ lecaibio.github.io/
 
 - **本地预览跟线上不一致**：`github-pages` gem 锁定了 GitHub 实际使用的 Jekyll 版本，本地用它就跟线上一致。如果偏差很大，`bundle update` 更新依赖。
 
+- **换了 theme 之后 favicon 没了**：`_includes/head.html` 是本地覆盖 minima 2.5.1 的同名文件，
+  favicon 的 `<link>` 就加在里面（2.5.1 没有 `custom-head.html` 这个 hook，3.x 才有）。
+  升级 theme 要重新从 gem 里 copy 一份 head.html 再把那几行加回去。文件里有注释提醒。
+
+- **favicon 文件放在哪**：
+
+  ```
+  favicon.ico                    # 必须在根目录：浏览器会盲请求 /favicon.ico，不读 HTML
+  assets/
+    favicon.svg                  # 源文件；下面三个都是从它光栅化出来的
+    favicon-32.png               # 这四个由 _includes/head.html 的 <link> 显式指名
+    favicon-16.png
+    apple-touch-icon.png         # 180px，无圆角（iOS 自己切）
+  ```
+
+  只有根目录那份 `.ico` 会被盲请求，别在 `assets/` 下再放一份。
+
+- **本地 `assets/` 会不会盖掉 theme 的？不会，是合并**。minima 自己也有 `assets/`，build 之后
+  `_site/assets/` 里 `main.css`、`minima-social-icons.svg` 和你自己的文件是并存的。放心用。
+
 ## 不本地预览的备选
 
 如果只是改 typo 或小段落，直接 push 到 GitHub，等 1-2 分钟刷新 `https://lecaibio.github.io` 也能看到效果。本地预览主要价值是写长文章时反复调整格式。
@@ -140,4 +193,4 @@ git config user.email "lecai@alumni.stanford.edu"
 
 ---
 
-最后更新：2026-04-28
+最后更新：2026-08-15
