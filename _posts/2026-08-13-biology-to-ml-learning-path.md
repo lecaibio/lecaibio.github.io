@@ -100,6 +100,16 @@ Courses teach you to run a model on a clean dataset. Nothing teaches judgment ex
 
 This is also where people who skipped Block 1 should start. You will be looking things up constantly for the first two weeks. That is the cost of this route and it is survivable.
 
+### Is it actually an ML question?
+
+Near the end of a first ML course a thought arrives, and it is a reasonable one. You have twenty measurements per sample and you have only ever looked at them one at a time. A model uses all twenty at once. Surely that is where the biomarker is.
+
+Sometimes. But check what you are asking first. ML predicts Y for a new sample. Statistics estimates whether X affects Y and by how much. Most biology experiments ask the second one, and for those a linear model with proper multiple testing wins, because it gives you an effect size and an interval. A classifier gives you an accuracy number, which does not tell you what changed.
+
+Then check the sample size, meaning independent units and not rows. Six mice per group is six, however many transcripts you measured on each. At that size a model will find something. It will also find something after you shuffle the labels, and telling those apart is what you cannot do at n=12.
+
+So learn on public data, where sample size is someone else's problem, and bring your own experiment back when you have a prediction question and the units to check the answer. Knowing the boring method wins here is the same judgment as knowing when it doesn't.
+
 ### Start here: NHANES
 
 **https://www.cdc.gov/nchs/nhanes/**
