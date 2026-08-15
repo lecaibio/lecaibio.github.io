@@ -1,0 +1,40 @@
+---
+layout: page
+title: Tags
+permalink: /tags/
+description: "Every post on this site, grouped by tag."
+---
+
+{%- comment -%}
+  Built from site.tags, which Jekyll populates from post front matter. No plugin involved,
+  so this works as-is on GitHub Pages (jekyll-archives does not).
+
+  site.tags is a hash; `sort` turns it into [name, posts] pairs ordered by name.
+  slugify: "raw" must match _includes/tag-list.html, or the anchors will not line up.
+{%- endcomment -%}
+
+{%- assign tags = site.tags | sort -%}
+
+<p class="tag-cloud">
+  {%- for tag in tags -%}
+    <a class="tag" href="#{{ tag[0] | slugify: 'raw' }}">{{ tag[0] }}<span class="tag-count">{{ tag[1].size }}</span></a>
+  {%- endfor -%}
+</p>
+
+{%- for tag in tags -%}
+  <h2 id="{{ tag[0] | slugify: 'raw' }}" class="tag-heading">{{ tag[0] }}</h2>
+  <ul class="post-list">
+    {%- for post in tag[1] -%}
+    <li>
+      {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
+      <p class="post-meta"><span class="post-date">{{ post.date | date: date_format }}</span></p>
+      <h3>
+        <a class="post-link" href="{{ post.url | relative_url }}">{{ post.title | escape }}</a>
+      </h3>
+      {%- if post.description -%}
+        <p class="post-description">{{ post.description | strip_html | normalize_whitespace }}</p>
+      {%- endif -%}
+    </li>
+    {%- endfor -%}
+  </ul>
+{%- endfor -%}

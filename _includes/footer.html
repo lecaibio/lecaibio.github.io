@@ -1,0 +1,54 @@
+{%- comment -%}
+  Overrides minima 2.5.1's _includes/footer.html, which printed site.title three times:
+  once as a heading, once in the contact list (site.author falls back to site.title), and
+  once inside site.description. This is one line: name left, icon links right.
+
+  The icons come from the theme's own assets/minima-social-icons.svg sprite, so no new asset
+  is added. Those <symbol>s carry no viewBox, so they only render correctly at their native
+  16x16 — .svg-icon must not resize them. The envelope is inline because the sprite has no
+  mail icon; it is drawn on the same 16x16 grid so it matches.
+
+  Icon-only links need an accessible name, hence aria-label on each.
+
+  The h-card / u-url / p-name / u-email classes are microformats the theme sets up and
+  jekyll-seo-tag pairs with; they are kept even though the markup around them changed.
+{%- endcomment -%}
+
+<footer class="site-footer h-card">
+  <data class="u-url" href="{{ "/" | relative_url }}"></data>
+
+  {%- comment -%}
+    footer-inner is its own element rather than a class on .wrapper: the theme's .wrapper
+    carries a clearfix ::after, which would become a third flex item and take the right-hand
+    slot that justify-content: space-between is meant to give the icons.
+  {%- endcomment -%}
+  <div class="wrapper">
+   <div class="footer-inner">
+    <span class="p-name footer-name">{{ site.title | escape }}</span>
+
+    <span class="footer-icons">
+      {%- if site.email %}
+      <a class="u-email" href="mailto:{{ site.email }}" aria-label="Email" title="Email">
+        <svg class="svg-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M1.6 2.5h12.8c.5 0 .9.4.9.9v9.2c0 .5-.4.9-.9.9H1.6a.9.9 0 0 1-.9-.9V3.4c0-.5.4-.9.9-.9zm.6 2.6v7.2h11.6V5.1L8.4 9.4a.7.7 0 0 1-.8 0L2.2 5.1zm11-1.2H3.4L8 7.9l4.2-4z"/></svg>
+      </a>
+      {%- endif %}
+
+      {%- if site.github_username %}
+      <a href="https://github.com/{{ site.github_username | cgi_escape | escape }}" aria-label="GitHub" title="GitHub">
+        <svg class="svg-icon" aria-hidden="true" focusable="false"><use xlink:href="{{ '/assets/minima-social-icons.svg#github' | relative_url }}"></use></svg>
+      </a>
+      {%- endif %}
+
+      {%- if site.linkedin_username %}
+      <a href="https://www.linkedin.com/in/{{ site.linkedin_username | cgi_escape | escape }}/" aria-label="LinkedIn" title="LinkedIn">
+        <svg class="svg-icon" aria-hidden="true" focusable="false"><use xlink:href="{{ '/assets/minima-social-icons.svg#linkedin' | relative_url }}"></use></svg>
+      </a>
+      {%- endif %}
+
+      <a href="{{ "/feed.xml" | relative_url }}" aria-label="RSS" title="RSS">
+        <svg class="svg-icon" aria-hidden="true" focusable="false"><use xlink:href="{{ '/assets/minima-social-icons.svg#rss' | relative_url }}"></use></svg>
+      </a>
+    </span>
+   </div>
+  </div>
+</footer>

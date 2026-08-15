@@ -1,5 +1,16 @@
 title: Le Cai
 tagline: Bio + AI, Clinical ML, Infrastructure
+# Site-wide fallback for <meta name="description">, used on pages with no front-matter
+# description of their own. Without it, jekyll-seo-tag falls back to the GitHub repository
+# description that jekyll-github-metadata supplies, which is not edited here.
+description: >-
+  Bio + AI, clinical ML, and the infrastructure underneath. Notes from working on both sides.
+
+# Read by _includes/footer.html. Keeping them here means the footer links live in one
+# place instead of being hardcoded into the template.
+email: lecai@alumni.stanford.edu
+github_username: lecaibio
+linkedin_username: le-cai-60962011a
 theme: minima
 repository: lecaibio/lecaibio.github.io
 exclude:

@@ -1,0 +1,17 @@
+{%- comment -%}
+  Renders a post's tags as links into the /tags/ page. Not a minima file — ours.
+
+  Usage: {%- include tag-list.html post=post -%}   (list page)
+         {%- include tag-list.html post=page -%}   (single post)
+
+  slugify: "raw" only collapses whitespace, so non-ASCII tags like 中文 survive as anchors.
+  The default mode strips them to an empty string, which would silently break the link.
+{%- endcomment -%}
+
+{%- if include.post.tags.size > 0 -%}
+<span class="tag-list">
+  {%- for tag in include.post.tags -%}
+    <a class="tag" href="{{ '/tags/' | relative_url }}#{{ tag | slugify: 'raw' }}">{{ tag }}</a>
+  {%- endfor -%}
+</span>
+{%- endif -%}

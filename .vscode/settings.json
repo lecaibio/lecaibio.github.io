@@ -1,0 +1,17 @@
+{
+  // assets/main.scss has to open with Jekyll YAML front matter (the `---` lines), which is
+  // not valid SCSS, so VS Code's built-in SCSS parser reports an error on it. Jekyll strips
+  // the front matter before Sass sees the file, so the error is cosmetic — the build is fine.
+  //
+  // Treating just that one file as plaintext silences it. It is a three-line shim, so losing
+  // syntax highlighting there costs nothing, and the real stylesheets in _sass/ keep full
+  // SCSS validation.
+  "files.associations": {
+    "**/assets/main.scss": "plaintext"
+  }
+
+  // If some other SCSS extension still complains about _sass/*.scss (usually about minima's
+  // variables, which live inside the gem and not in this workspace), turn its validation off
+  // rather than changing the stylesheets:
+  //   "scss.validate": false
+}

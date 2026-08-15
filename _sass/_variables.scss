@@ -1,0 +1,9 @@
+@charset "utf-8";
+// Variable overrides for the minima theme. Imported by assets/main.scss BEFORE
+// @import "minima", because the theme declares its own with !default and the first
+// definition wins. See `bundle show minima`/_sass/minima.scss for the full list.
+
+$base-font-size:   17px;   // 16px is tight for long-form reading
+$base-line-height: 1.65;
+$brand-color:      #1a5fb4;
+$ink:              #111a24; // the navy in favicon.svg and the theme-color meta tag

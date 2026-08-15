@@ -1,0 +1,214 @@
+@charset "utf-8";
+// Everything this site adds on top of minima. Imported by assets/main.scss AFTER
+// @import "minima", so the theme's variables ($spacing-unit, $grey-color, ...) and its
+// media-query mixin are all in scope here.
+
+/**
+ * Front-page intro photo. Floats beside the text on wide screens. On phones it becomes a
+ * centred block: a 224px float there would squeeze the text into a narrow gutter.
+ */
+.intro-photo {
+  float: right;
+  width: 224px;
+  height: auto;
+  margin: 0.4em 0 1.2em 1.8em;
+  border-radius: 8px;
+}
+
+@include media-query($on-palm) {
+  .intro-photo {
+    float: none;
+    display: block;
+    width: 190px;
+    margin: 0 auto 1.5em;
+  }
+}
+
+/**
+ * Post list. Date and tags on one meta line, then title, then description. No rules between
+ * entries: the blocks are distinct enough on their own, and a full-width 1px line every
+ * three lines of text reads like a 2005 sidebar.
+ */
+.post-list-heading {
+  clear: both; // the intro photo floats; keep it off this heading
+  margin-top: $spacing-unit;
+  font-size: 22px;
+  letter-spacing: 0.02em;
+  color: $grey-color-dark;
+}
+
+.post-list {
+  > li {
+    margin-bottom: 26px;
+  }
+
+  h3 {
+    margin-bottom: 5px;
+    font-size: 25px;
+    line-height: 1.25;
+  }
+}
+
+.post-meta {
+  margin-bottom: 4px;
+  font-size: $small-font-size;
+  line-height: 1.6;
+}
+
+.post-date {
+  color: $grey-color;
+}
+
+.post-description {
+  margin-bottom: 0;
+  color: $grey-color-dark;
+  font-size: $base-font-size * 0.94;
+  line-height: 1.55;
+}
+
+/**
+ * Tags. Quiet by default — they are navigation, not the point of the page.
+ */
+.tag {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 8px;
+  border-radius: 3px;
+  background: #eef1f5;
+  color: $grey-color-dark;
+  font-size: 13px;
+  line-height: 1.7;
+  white-space: nowrap;
+
+  &:visited { color: $grey-color-dark; }
+
+  &:hover {
+    background: #e1e7ee;
+    color: $ink;
+    text-decoration: none;
+  }
+}
+
+.tag-list .tag:first-child {
+  margin-left: 10px; // separates the first tag from the date
+}
+
+.tag-cloud {
+  margin-bottom: $spacing-unit;
+
+  .tag {
+    margin: 0 8px 8px 0;
+    padding: 3px 11px;
+    font-size: 15px;
+  }
+}
+
+.tag-count {
+  margin-left: 7px;
+  color: $grey-color;
+  font-size: 12px;
+}
+
+.tag-heading {
+  margin-top: $spacing-unit * 1.2;
+  margin-bottom: 14px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid $grey-color-light;
+  font-size: 22px;
+}
+
+/**
+ * Post body: give figures room, and headings a clearer break from the text above them.
+ */
+.post-content {
+  img {
+    display: block;
+    margin: 1.6em auto;
+  }
+
+  h2 { margin-top: 1.7em; }
+  h3 { margin-top: 1.3em; }
+
+  table { font-size: $base-font-size * 0.94; }
+}
+
+/**
+ * Highlighted sentence, kept inline in the prose.
+ */
+mark {
+  background: #fbf1c7;
+  color: inherit;
+  padding: 0.08em 0.1em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/**
+ * Horizontal rule. The browser default is a bevelled 2px groove — the single most dated
+ * element on a plain Jekyll page. This is a short, centred hairline instead.
+ */
+hr {
+  width: 96px;
+  height: 0;
+  margin: $spacing-unit * 1.4 auto;
+  border: 0;
+  border-top: 1px solid $grey-color-light;
+}
+
+/**
+ * Footer. One line: name left, icon links right.
+ */
+.site-footer {
+  padding: $spacing-unit 0;
+  border-top: 1px solid $grey-color-light;
+}
+
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.footer-name {
+  color: $grey-color-dark;
+  font-size: $small-font-size;
+  font-weight: 600;
+}
+
+.footer-icons {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+
+  a {
+    display: flex; // kills the inline-baseline gap under the svg
+    line-height: 0;
+  }
+
+  // The sprite's <symbol>s carry no viewBox, so the icons cannot be scaled — they render
+  // at their native 16x16 or get cropped. Only the theme's padding is dropped here; the
+  // spacing comes from the flex gap above.
+  .svg-icon {
+    padding-right: 0;
+    vertical-align: middle;
+    transition: fill 0.15s ease-in-out;
+  }
+
+  a:hover .svg-icon {
+    fill: $ink;
+  }
+}
+
+/**
+ * Callout: a short passage set apart from the argument around it.
+ */
+.callout {
+  margin: 1.8em 0;
+  padding: 0.9em 1.2em;
+  background: #f4f6f8;
+  border-left: 3px solid #8a99a8;
+
+  > :first-child { margin-top: 0; }
+  > :last-child  { margin-bottom: 0; }
+}

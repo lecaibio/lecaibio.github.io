@@ -1,0 +1,46 @@
+---
+layout: default
+---
+
+{%- comment -%}
+  Overrides minima 2.5.1's _layouts/home.html. Changes from the theme's version:
+    - each post shows its front-matter `description` under the title (the same field also
+      feeds jekyll-seo-tag's <meta name="description">)
+    - each post shows its tags on the meta line, linking into /tags/
+    - the theme's `site.show_excerpts` branch is dropped, since a written description reads
+      better than an auto-clipped first paragraph
+{%- endcomment -%}
+
+<div class="home">
+  {%- if page.title -%}
+    <h1 class="page-heading">{{ page.title }}</h1>
+  {%- endif -%}
+
+  {{ content }}
+
+  {%- if site.posts.size > 0 -%}
+    <h2 class="post-list-heading">{{ page.list_title | default: "Posts" }}</h2>
+    <ul class="post-list">
+      {%- for post in site.posts -%}
+      <li>
+        {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
+        <p class="post-meta">
+          <span class="post-date">{{ post.date | date: date_format }}</span>
+          {%- include tag-list.html post=post -%}
+        </p>
+        <h3>
+          <a class="post-link" href="{{ post.url | relative_url }}">
+            {{ post.title | escape }}
+          </a>
+        </h3>
+        {%- if post.description -%}
+          <p class="post-description">{{ post.description | strip_html | normalize_whitespace }}</p>
+        {%- endif -%}
+      </li>
+      {%- endfor -%}
+    </ul>
+
+    <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | relative_url }}">via RSS</a></p>
+  {%- endif -%}
+
+</div>

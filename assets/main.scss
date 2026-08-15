@@ -1,0 +1,10 @@
+---
+# This file must start with YAML front matter (even empty) or Jekyll will copy it through
+# instead of compiling it. The `---` lines are not valid SCSS, so an editor that parses
+# this file as plain SCSS will flag them — Jekyll strips them before Sass ever sees them.
+# That is why the real styles live in _sass/ and this file stays a three-line shim.
+---
+
+@import "variables";  // must come first: minima's own vars are declared !default
+@import "minima";
+@import "custom";
