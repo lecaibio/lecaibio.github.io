@@ -3,7 +3,7 @@ title: "Bio to ML: A Learning Path"
 description: "Finishing an ML course does not connect to anything you would actually do at work. This is the sequence that goes around it, written for people coming from biology."
 date: 2026-08-13
 layout: post
-tags: [bio + ai, career]
+tags: [bio + ai, career, reproducibility]
 ---
 
 **Who this is for:** you want a career doing ML in biology/healthcare, eventually. You have probably opened an ML course and not finished it, or finished one and still not known what to do next. A course by itself does not connect to anything you would actually do at work. This is what goes around it.

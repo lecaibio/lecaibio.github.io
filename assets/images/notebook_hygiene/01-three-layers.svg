@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 730" width="800" height="730" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <rect width="800" height="730" fill="#fcfcfb"/>
+
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#52514e"/>
+    </marker>
+    <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#a8a69e"/>
+    </marker>
+  </defs>
+
+  <style>
+    .box   { fill:#ffffff; stroke:#2a78d6; stroke-width:1.6; rx:6; }
+    .exit  { fill:#f4f3f0; stroke:#c9c7bf; stroke-width:1.2; rx:6; }
+    .leaf  { fill:#fdf1ea; stroke:#eb6834; stroke-width:1.6; rx:6; }
+    .t     { font-size:13.5px; fill:#0b0b0b; }
+    .code  { font-size:11px; fill:#52514e; font-family:ui-monospace, SFMono-Regular, Menlo, monospace; }
+    .lbl   { font-size:11.5px; fill:#52514e; }
+    .exitt { font-size:12px; fill:#6b6960; }
+    .flow  { stroke:#52514e; stroke-width:1.6; fill:none; marker-end:url(#a); }
+    .gflow { stroke:#a8a69e; stroke-width:1.3; fill:none; marker-end:url(#ag); }
+    .bnd   { stroke:#eb6834; stroke-width:1.4; stroke-dasharray:7 5; fill:none; }
+    .note  { font-size:12px; fill:#c0511f; }
+  </style>
+
+  <!-- working copy -->
+  <rect class="box" x="160" y="20" width="280" height="52"/>
+  <text class="t" x="300" y="42" text-anchor="middle">Notebook on disk</text>
+  <text class="code" x="300" y="61" text-anchor="middle">outputs intact, and stay intact</text>
+  <path class="flow" d="M300,72 L300,116"/>
+  <text class="lbl" x="311" y="99">git add</text>
+
+  <!-- layer 1 -->
+  <rect class="box" x="160" y="118" width="280" height="56"/>
+  <text class="t" x="300" y="141" text-anchor="middle">Layer 1 · clean filter</text>
+  <text class="code" x="300" y="160" text-anchor="middle">strips outputs entering the index</text>
+  <path class="gflow" d="M440,146 L466,146"/>
+  <rect class="exit" x="470" y="110" width="316" height="76"/>
+  <text class="exitt" x="484" y="131">Catches the mistake in under a second.</text>
+  <text class="exitt" x="484" y="150">Configured per clone, not in the repo.</text>
+  <text class="exitt" x="484" y="169">A fresh clone has none of it.</text>
+  <path class="flow" d="M300,174 L300,218"/>
+  <text class="lbl" x="311" y="201">git commit</text>
+
+  <!-- layer 2 -->
+  <rect class="box" x="160" y="220" width="280" height="56"/>
+  <text class="t" x="300" y="243" text-anchor="middle">Layer 2 · local check</text>
+  <text class="code" x="300" y="262" text-anchor="middle">reads blobs from git, not from disk</text>
+  <path class="gflow" d="M440,248 L466,248"/>
+  <rect class="exit" x="470" y="212" width="316" height="76"/>
+  <text class="exitt" x="484" y="233">Catches it before a round trip is spent</text>
+  <text class="exitt" x="484" y="252">on a pull request that will be rejected.</text>
+  <text class="exitt" x="484" y="271">Still your machine, still opt-in.</text>
+  <path class="flow" d="M300,276 L300,386"/>
+  <text class="lbl" x="311" y="303">git push · open pull request</text>
+
+  <!-- enforcement boundary -->
+  <path class="bnd" d="M10,334 L790,334"/>
+  <text class="lbl" x="24" y="326">above · your machine, your config</text>
+  <text class="note" x="24" y="354">below · infrastructure you control</text>
+  <text class="note" x="786" y="326" text-anchor="end">Enforcement boundary</text>
+
+  <!-- layer 3 -->
+  <rect class="leaf" x="160" y="388" width="280" height="58"/>
+  <text class="t" x="300" y="411" text-anchor="middle">Layer 3 · required server check</text>
+  <text class="code" x="300" y="430" text-anchor="middle">fresh environment, no local config</text>
+  <path class="gflow" d="M440,417 L466,417"/>
+  <rect class="exit" x="470" y="381" width="316" height="76"/>
+  <text class="exitt" x="484" y="402">Runs on every pull request, always.</text>
+  <text class="exitt" x="484" y="421">Nothing you configured locally applies,</text>
+  <text class="exitt" x="484" y="440">which is what makes it enforcement.</text>
+
+  <!-- failure exit -->
+  <path class="gflow" d="M160,417 L96,417 L96,458"/>
+  <rect class="exit" x="12" y="460" width="136" height="76"/>
+  <text class="exitt" x="24" y="481">Fail — the</text>
+  <text class="exitt" x="24" y="500">pull request</text>
+  <text class="exitt" x="24" y="519">cannot merge.</text>
+
+  <path class="flow" d="M300,446 L300,494"/>
+  <text class="lbl" x="311" y="475">pass</text>
+
+  <!-- merge -->
+  <rect class="leaf" x="160" y="496" width="280" height="58"/>
+  <text class="t" x="300" y="519" text-anchor="middle">Squash merge into main</text>
+  <text class="code" x="300" y="538" text-anchor="middle">what lands is what was checked</text>
+  <path class="gflow" d="M440,525 L466,525"/>
+  <rect class="exit" x="470" y="489" width="316" height="76"/>
+  <text class="exitt" x="484" y="510">Preserve every commit instead and a</text>
+  <text class="exitt" x="484" y="529">dirty one under a clean tip rides in</text>
+  <text class="exitt" x="484" y="548">behind a passing check.</text>
+  <path class="flow" d="M300,554 L300,592"/>
+
+  <!-- terminal -->
+  <rect class="leaf" x="180" y="594" width="240" height="44"/>
+  <text class="t" x="300" y="621" text-anchor="middle">History with no outputs in it</text>
+
+  <text class="note" x="24" y="674">Layers 1 and 3 are the same tool installed twice, configured independently.</text>
+  <text class="lbl" x="24" y="700">Above the boundary: the cost of being caught. Below it: the only layer that is enforcement.</text>
+</svg>
