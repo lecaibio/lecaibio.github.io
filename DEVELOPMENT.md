@@ -125,6 +125,7 @@ tags: [clinical ml, synthetic data]
 | `bio + ai` | 行业观察、方向判断 |
 | `career` | 路径、学习、转行 |
 | `infrastructure` | 底下那层：生产运维（AWS）和分析工作的底层（git、CI）都算 |
+| `llm` | 大模型怎么用：文本管线、分类、成本和数据边界 |
 | `reproducibility` | 环境、seed、记录、别人能不能把这个分析跑第二遍 |
 | `side projects` | 自己维护的东西 |
 | `industry` | 药企、会议、市场 |
