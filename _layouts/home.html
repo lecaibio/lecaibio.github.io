@@ -11,6 +11,14 @@ layout: default
       stay out of the way of the date and tags (see _includes/reading-time.html)
     - the theme's `site.show_excerpts` branch is dropped, since a written description reads
       better than an auto-clipped first paragraph
+    - posts tagged `pin` are lifted into their own list above the chronological run
+
+  Pinning is a plain tag, so nothing here needs a plugin or a second front-matter field.
+  Jekyll builds site.tags itself, and site.tags.pin is already newest-first.
+
+  The two lists need a heading each. Without one the front page would open on a list that
+  is not in date order and looks like it lost its sort, and `pin` is hidden from the tag
+  chips (see _includes/tag-list.html) so no per-post marker explains it.
 {%- endcomment -%}
 
 <div class="home">
@@ -21,27 +29,15 @@ layout: default
   {{ content }}
 
   {%- if site.posts.size > 0 -%}
+    {%- assign pinned = site.tags.pin -%}
+
+    {%- if pinned.size > 0 -%}
+      <h2 class="post-list-heading">{{ page.pinned_title | default: "Start here" }}</h2>
+      {%- include post-list.html posts=pinned -%}
+    {%- endif -%}
+
     <h2 class="post-list-heading">{{ page.list_title | default: "Posts" }}</h2>
-    <ul class="post-list">
-      {%- for post in site.posts -%}
-      <li>
-        {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
-        <p class="post-meta">
-          <span class="post-date">{{ post.date | date: date_format }}</span>
-          {%- include tag-list.html post=post -%}
-        </p>
-        <h3>
-          <a class="post-link" href="{{ post.url | relative_url }}">
-            {{ post.title | escape }}
-          </a>
-        </h3>
-        {%- if post.description -%}
-          <p class="post-description">{{ post.description | strip_html | normalize_whitespace }}</p>
-        {%- endif -%}
-        {%- include reading-time.html post=post -%}
-      </li>
-      {%- endfor -%}
-    </ul>
+    {%- include post-list.html posts=site.posts exclude_tag="pin" -%}
 
     <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | relative_url }}">via RSS</a></p>
   {%- endif -%}

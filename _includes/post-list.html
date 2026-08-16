@@ -1,0 +1,49 @@
+{%- comment -%}
+  Renders a <ul class="post-list"> of posts. Not a minima file — ours.
+
+  Both the front page and /tags/ need this markup twice now (a pinned list, then the rest),
+  so it lives here instead of being repeated four times.
+
+  Usage: include post-list.html posts=site.posts
+         include post-list.html posts=site.posts exclude_tag="pin"
+         include post-list.html posts=tag_posts compact=true
+
+  Written without Liquid's tag delimiters on purpose. Liquid parses include tags inside a
+  comment block, so a realistic example here is a real parse error, and the failure is
+  reported against whichever layout pulled this file in.
+
+  exclude_tag skips posts carrying that tag, which is how the front page avoids listing a
+  pinned post a second time in the chronological run below.
+
+  compact drops the tag chips and the reading time. /tags/ uses it: the tag is already the
+  heading above the list, and that page is for finding a post you know about rather than
+  deciding whether to start one.
+{%- endcomment -%}
+
+<ul class="post-list">
+  {%- for post in include.posts -%}
+    {%- if include.exclude_tag and post.tags contains include.exclude_tag -%}
+      {%- continue -%}
+    {%- endif -%}
+    <li>
+      {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
+      <p class="post-meta">
+        <span class="post-date">{{ post.date | date: date_format }}</span>
+        {%- unless include.compact -%}
+          {%- include tag-list.html post=post -%}
+        {%- endunless -%}
+      </p>
+      <h3>
+        <a class="post-link" href="{{ post.url | relative_url }}">
+          {{ post.title | escape }}
+        </a>
+      </h3>
+      {%- if post.description -%}
+        <p class="post-description">{{ post.description | strip_html | normalize_whitespace }}</p>
+      {%- endif -%}
+      {%- unless include.compact -%}
+        {%- include reading-time.html post=post -%}
+      {%- endunless -%}
+    </li>
+  {%- endfor -%}
+</ul>

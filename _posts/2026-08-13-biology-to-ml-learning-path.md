@@ -310,4 +310,8 @@ For a structured version: MLOps (Machine Learning Operations Specialization, Duk
 Thanks to Yifeng Liang, Lengxi Huang, and Karen Wong, who I met through the [CABS summer intern program](https://ds4cabs.github.io). A lot of this document came out of talking with them. Their questions made me organize thinking I had been carrying loosely, and several of their ideas changed how I see the sequence. Teaching turned out to be its own form of learning. None of them started with the Coursera course, because all three already had intro ML and Python coursework behind them. Each took a real dataset and worked a project through over the summer, picking up the pieces as they needed them. That is Block 1 skipped for the right reason, and it works out great.
 <br>
 Thanks also to Shucheng Cao, from the same program, who came to this with the ML already behind him and went down the list to find Block 6 was his only blank. That question is why the block now says which half of it you can learn without the job.
+<br>
+AI helped me organize the writing; the judgments are mine.
+<br>
+The views here are my own and not affiliated with any employer or organization.
 </small>

@@ -11,30 +11,38 @@ description: "Every post on this site, grouped by tag."
 
   site.tags is a hash; `sort` turns it into [name, posts] pairs ordered by name.
   slugify: "raw" must match _includes/tag-list.html, or the anchors will not line up.
+
+  `pin` is pulled out of that alphabetical run and rendered first, in the cloud and in the
+  sections below. Left in place it would sort between `llm` and `reproducibility`, where a
+  tag that means "start with these" reads as an accident. It is skipped in the main loop so
+  it is not listed twice.
 {%- endcomment -%}
 
 {%- assign tags = site.tags | sort -%}
+{%- assign pinned = site.tags.pin -%}
 
 <p class="tag-cloud">
+  {%- if pinned.size > 0 -%}
+    <a class="tag" href="#pin">pin<span class="tag-count">{{ pinned.size }}</span></a>
+  {%- endif -%}
   {%- for tag in tags -%}
+    {%- if tag[0] == 'pin' -%}{%- continue -%}{%- endif -%}
     <a class="tag" href="#{{ tag[0] | slugify: 'raw' }}">{{ tag[0] }}<span class="tag-count">{{ tag[1].size }}</span></a>
   {%- endfor -%}
 </p>
 
+{%- if pinned.size > 0 -%}
+  <h2 id="pin" class="tag-heading">pin</h2>
+  {%- include post-list.html posts=pinned compact=true -%}
+{%- endif -%}
+
+{%- comment -%}
+  tag_posts is assigned before the include because Jekyll's include tag rejects a bracket
+  index as a parameter value: `posts=tag[1]` is a build error, not an empty list.
+{%- endcomment -%}
 {%- for tag in tags -%}
+  {%- if tag[0] == 'pin' -%}{%- continue -%}{%- endif -%}
+  {%- assign tag_posts = tag[1] -%}
   <h2 id="{{ tag[0] | slugify: 'raw' }}" class="tag-heading">{{ tag[0] }}</h2>
-  <ul class="post-list">
-    {%- for post in tag[1] -%}
-    <li>
-      {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
-      <p class="post-meta"><span class="post-date">{{ post.date | date: date_format }}</span></p>
-      <h3>
-        <a class="post-link" href="{{ post.url | relative_url }}">{{ post.title | escape }}</a>
-      </h3>
-      {%- if post.description -%}
-        <p class="post-description">{{ post.description | strip_html | normalize_whitespace }}</p>
-      {%- endif -%}
-    </li>
-    {%- endfor -%}
-  </ul>
+  {%- include post-list.html posts=tag_posts compact=true -%}
 {%- endfor -%}

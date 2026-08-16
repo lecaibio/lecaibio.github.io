@@ -6,11 +6,18 @@
 
   slugify: "raw" only collapses whitespace, so non-ASCII tags like 中文 survive as anchors.
   The default mode strips them to an empty string, which would silently break the link.
+
+  `pin` is filtered out. It orders the front page rather than describing what a post is
+  about, and rendering it beside real subjects like "clinical ml" would read as a mistake.
+  Filtering before the size check matters: a post tagged only `pin` would otherwise emit an
+  empty .tag-list and carry its spacing.
 {%- endcomment -%}
 
-{%- if include.post.tags.size > 0 -%}
+{%- assign visible_tags = include.post.tags | where_exp: "tag", "tag != 'pin'" -%}
+
+{%- if visible_tags.size > 0 -%}
 <span class="tag-list">
-  {%- for tag in include.post.tags -%}
+  {%- for tag in visible_tags -%}
     <a class="tag" href="{{ '/tags/' | relative_url }}#{{ tag | slugify: 'raw' }}">{{ tag }}</a>
   {%- endfor -%}
 </span>

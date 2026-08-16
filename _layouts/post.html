@@ -36,6 +36,15 @@ layout: default
     {{ content }}
   </div>
 
+  {%- comment -%}
+    Most visitors arrive on a post rather than the front page, so the contact line lives here
+    too. site.email is the same address the footer and the front page use.
+  {%- endcomment -%}
+  <div class="post-endnote">
+    If this touches something you're working on, I'd like to hear about it, even the
+    half-formed version. <a href="mailto:{{ site.email }}">{{ site.email }}</a>
+  </div>
+
   {%- if site.disqus.shortname -%}
     {%- include disqus_comments.html -%}
   {%- endif -%}

@@ -303,3 +303,25 @@ hr {
   > :first-child { margin-top: 0; }
   > :last-child  { margin-bottom: 0; }
 }
+
+/**
+ * Post endnote: the contact line under every post.
+ *
+ * A tinted box rather than a rule. Most posts end with `---` (a centred hairline) followed
+ * by a small-print "A note on this piece", and the site footer draws its own border below
+ * this, so a horizontal rule here put two full-width lines within 100px of each other.
+ * Enclosing it instead separates it without adding a third line, and lets the margins stay
+ * tight — the box does the work whitespace would otherwise have to do.
+ *
+ * Same tint as .callout so no new colour enters the palette; the hairline border is what
+ * distinguishes it from a callout inside the argument.
+ */
+.post-endnote {
+  margin: $spacing-unit 0 ($spacing-unit * 0.8);
+  padding: 0.75em 1em;
+  background: #f4f6f8;
+  border: 1px solid $grey-color-light;
+  border-radius: 3px;
+  color: $grey-color-dark;
+  font-size: $small-font-size;
+}
