@@ -1,0 +1,64 @@
+{%- comment -%}
+  Table of contents for a post, built from its <h2> headings. Not a minima file — ours.
+
+  Usage: {%- include toc.html content=content -%}
+
+  Built from the rendered HTML rather than a plugin, because GitHub Pages allows neither
+  custom plugins nor kramdown's {:toc} without per-post markup. kramdown's auto_ids gives
+  every heading an id already, so the anchors exist without any extra work.
+
+  h3 is nested under its h2, but only when a post has 5 or fewer top-level sections. A post
+  that already has many h2s does not need a second level to be findable, and showing one
+  would hurt: the learning-path post has 9 h2s and 17 h3s, so a full listing there is 26
+  lines, longer than several of the sections it points at.
+
+  Posts with fewer than 4 entries get nothing — a list of two or three items sitting above
+  a short post is furniture, not navigation.
+{%- endcomment -%}
+
+{%- assign chunks = include.content | split: '<h2 id="' -%}
+{%- assign h2_count = chunks | size | minus: 1 -%}
+{%- assign h3_count = include.content | split: '<h3 id="' | size | minus: 1 -%}
+
+{%- assign show_h3 = false -%}
+{%- assign entry_count = h2_count -%}
+{%- if h2_count <= 5 and h3_count > 0 -%}
+  {%- assign show_h3 = true -%}
+  {%- assign entry_count = h2_count | plus: h3_count -%}
+{%- endif -%}
+
+{%- if entry_count >= 4 -%}
+<nav class="post-toc" aria-labelledby="post-toc-heading">
+  <p class="post-toc-heading" id="post-toc-heading">Contents</p>
+  <ul class="post-toc-list">
+    {%- for chunk in chunks offset: 1 -%}
+      {%- assign rest = chunk | split: '</h2>' | first -%}
+      {%- assign id = rest | split: '"' | first -%}
+      {%- comment -%}
+        What is left after the id and its closing `">` is the heading's inner HTML, which
+        may contain inline tags (<code>, <em>), so strip them for the link text.
+      {%- endcomment -%}
+      {%- assign label = rest | remove_first: id | remove_first: '">' | strip_html | strip -%}
+      <li>
+        <a href="#{{ id }}">{{ label }}</a>
+        {%- if show_h3 -%}
+          {%- comment -%}
+            The chunk runs to the next h2, so any h3 inside it belongs to this section.
+          {%- endcomment -%}
+          {%- assign subs = chunk | split: '<h3 id="' -%}
+          {%- if subs.size > 1 -%}
+            <ul class="post-toc-sublist">
+              {%- for sub in subs offset: 1 -%}
+                {%- assign sub_rest = sub | split: '</h3>' | first -%}
+                {%- assign sub_id = sub_rest | split: '"' | first -%}
+                {%- assign sub_label = sub_rest | remove_first: sub_id | remove_first: '">' | strip_html | strip -%}
+                <li><a href="#{{ sub_id }}">{{ sub_label }}</a></li>
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+        {%- endif -%}
+      </li>
+    {%- endfor -%}
+  </ul>
+</nav>
+{%- endif -%}

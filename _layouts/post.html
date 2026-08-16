@@ -3,10 +3,14 @@ layout: default
 ---
 
 {%- comment -%}
-  Overrides minima 2.5.1's _layouts/post.html. The only change: tags on the meta line under
-  the date, linking into /tags/. The front-matter `description` is deliberately NOT printed
-  here — it goes to <meta name="description"> and to the front-page list, and repeating it
-  above an opening paragraph that already says the same thing reads badly.
+  Overrides minima 2.5.1's _layouts/post.html. Changes from the theme's version:
+    - tags on the meta line under the date, linking into /tags/
+    - word count and reading time under that
+    - a table of contents between the header and the body, on long posts only
+
+  The front-matter `description` is deliberately NOT printed here — it goes to
+  <meta name="description"> and to the front-page list, and repeating it above an opening
+  paragraph that already says the same thing reads badly.
 {%- endcomment -%}
 
 <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
@@ -23,7 +27,10 @@ layout: default
       {%- endif -%}
       {%- include tag-list.html post=page -%}
     </p>
+    {%- include reading-time.html post=page -%}
   </header>
+
+  {%- include toc.html content=content -%}
 
   <div class="post-content e-content" itemprop="articleBody">
     {{ content }}

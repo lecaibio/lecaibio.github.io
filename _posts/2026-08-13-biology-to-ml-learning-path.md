@@ -10,7 +10,7 @@ tags: [bio + ai, career]
 
 **Who this is not for:** the "can an agent book my flights and organize my calendar" version of AI. Those tools exist and you do not need this document to find them. Same answer if you already work in industry and desperately want something for a task you do every day: buy it. Pay for Claude or ChatGPT, or ask your manager for a Microsoft Copilot license. Building your own takes six months and it will almost certainly be worse than what you can buy today. But if you want to be the person who eventually builds that kind of tool, this one is for you.
 
-**Block 1 is optional.** Not everyone learns from lectures, and some people already have the coursework. <u>If that is you, start at Block 3, pick a dataset, and come back to the earlier blocks when you get stuck.</u>
+**Block 1 is optional.** Not everyone learns from lectures, and some people already have the coursework. <mark>If you already do science work and use Python, start at Block 3, pick a dataset, and come back to the earlier blocks when you get stuck.</mark>
 
 This is the sequence that worked for me, not a curriculum. I am still working through parts of it myself.
 

@@ -18,7 +18,9 @@ biology. It is good data for learning how care is delivered and bad data for lea
 measurement means. Prevalence, the number most people would check, comes out right either
 way.
 
-## The two datasets
+## The comparison
+
+### The two datasets
 
 **[NHANES](https://www.cdc.gov/nchs/nhanes/index.html)** is a real, population-level survey:
 the CDC's National Health and Nutrition Examination Survey, which samples the US civilian
@@ -35,7 +37,7 @@ teaching.
 One measures people. The other simulates records. Both get used to answer questions about
 patients.
 
-## One instrument, two sources
+### One instrument, two sources
 
 The PHQ-9 is a nine-item depression questionnaire scored 0 to 27. A score of 10 or above
 indicates moderate or worse depressive symptoms and is the conventional point at which a
@@ -59,7 +61,7 @@ and the two errors cancel.
 Validating a synthetic dataset, the one thing you would check is prevalence. That is the
 number that matches.
 
-## The distribution
+### The distribution
 
 The same data one level down: the full distribution of scores among people who were screened.
 
@@ -70,7 +72,9 @@ respondents score zero, the mass falls off steeply, the tail past 10 is thin. Sy
 flat slab, every score from 5 to 27 about equally common. No clinical measurement is
 distributed this way.
 
-## Reading the module
+## Where the numbers come from
+
+### Reading the module
 
 The explanation is about forty lines of JSON, in
 `src/main/resources/modules/encounter/depression_screening.json`.
@@ -101,7 +105,7 @@ come out near the real prevalence. I don't know whether the constants were chose
 that happen or whether it fell out by luck. Either way, the number an analyst would
 sanity-check is the one that is right.
 
-## The same module, read as a protocol
+### The same module, read as a protocol
 
 Everything above describes the module as a data generator. Read as a description of care,
 most of it is accurate.
@@ -132,7 +136,7 @@ the modules, so what is correlated with what is correlated through the care path
 in between is there a latent biological state producing a measurement and also driving an
 outcome.
 
-## What the score doesn't reach
+### What the score doesn't reach
 
 Cradle to grave sets an expectation. In a real life, a patient who scores 20 on a depression
 questionnaire is on the way somewhere: a diagnosis, a prescription, follow-up scores that
@@ -158,7 +162,9 @@ Antidepressants do exist in the output. Their recorded reasons are post-traumati
 disorder, major depression in the veteran module, and fibromyalgia, each ordered by a module
 that reached its own conclusion, none of them by way of a screening score.
 
-## What a model learns here
+## What this means for ML
+
+### What a model learns here
 
 In real records the chain runs biology → symptoms → measured value → outcome. A high PHQ-9 is
 informative about what happens next because it is a noisy readout of a latent state, and that
@@ -170,7 +176,7 @@ because nothing after it reads it. A model that learns `P(outcome | score)` here
 correctly for this data, that the score carries no information — the wrong answer for real
 patients, on exactly the variables you care about.
 
-## Where it holds and where it doesn't
+### Where it holds and where it doesn't
 
 | Holds up                                                       | Doesn't hold up                                                     |
 | -------------------------------------------------------------- | ------------------------------------------------------------------- |

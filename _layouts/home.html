@@ -7,6 +7,8 @@ layout: default
     - each post shows its front-matter `description` under the title (the same field also
       feeds jekyll-seo-tag's <meta name="description">)
     - each post shows its tags on the meta line, linking into /tags/
+    - word count and reading time sit under the description, not on the meta line, so they
+      stay out of the way of the date and tags (see _includes/reading-time.html)
     - the theme's `site.show_excerpts` branch is dropped, since a written description reads
       better than an auto-clipped first paragraph
 {%- endcomment -%}
@@ -36,6 +38,7 @@ layout: default
         {%- if post.description -%}
           <p class="post-description">{{ post.description | strip_html | normalize_whitespace }}</p>
         {%- endif -%}
+        {%- include reading-time.html post=post -%}
       </li>
       {%- endfor -%}
     </ul>

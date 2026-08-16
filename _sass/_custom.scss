@@ -59,6 +59,17 @@
   color: $grey-color;
 }
 
+// Word count / reading time. Its own quiet line below the description on the index and
+// below the meta line in a post header — deliberately smaller and lighter than the date
+// and tags, which are what you actually navigate by.
+.post-stats {
+  display: block;
+  margin-top: 5px;
+  color: $grey-color;
+  font-size: 13px;
+  letter-spacing: 0.01em;
+}
+
 .post-description {
   margin-bottom: 0;
   color: $grey-color-dark;
@@ -118,6 +129,82 @@
 }
 
 /**
+ * In-post table of contents. Two columns on wide screens so a nine-section list is five
+ * rows rather than nine, one column on phones where two would be unreadably narrow.
+ * Only rendered on posts with 4+ headings — see _includes/toc.html.
+ */
+.post-toc {
+  margin-bottom: $spacing-unit;
+  padding: 15px 20px 17px;
+  background: #f7f9fa;
+  border: 1px solid $grey-color-light;
+  border-radius: 4px;
+}
+
+.post-toc-heading {
+  margin-bottom: 9px;
+  color: $grey-color;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.post-toc-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  column-count: 2;
+  column-gap: 34px;
+
+  > li {
+    margin-bottom: 9px;
+    // Keeps a section and its subsections together in one column.
+    break-inside: avoid;
+    font-size: 15px;
+    line-height: 1.45;
+
+    // Top-level entries carry the weight so the two levels read apart at a glance.
+    > a { font-weight: 600; }
+  }
+
+  a {
+    color: $text-color;
+    text-decoration: none;
+
+    &:hover {
+      color: $brand-color;
+      text-decoration: underline;
+    }
+  }
+}
+
+.post-toc-sublist {
+  margin: 3px 0 0;
+  padding: 0 0 0 13px;
+  list-style: none;
+  border-left: 1px solid $grey-color-light;
+
+  li {
+    margin-bottom: 2px;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  a { color: $grey-color-dark; }
+}
+
+@include media-query($on-palm) {
+  .post-toc {
+    padding: 13px 16px 15px;
+  }
+
+  .post-toc-list {
+    column-count: 1;
+  }
+}
+
+/**
  * Post body: give figures room, and headings a clearer break from the text above them.
  */
 .post-content {
@@ -128,6 +215,10 @@
 
   h2 { margin-top: 1.7em; }
   h3 { margin-top: 1.3em; }
+
+  // A subsection heading that opens a section sits right under it, with no prose between,
+  // so close the gap and let the size difference do the work.
+  h2 + h3 { margin-top: 0.55em; }
 
   table { font-size: $base-font-size * 0.94; }
 }

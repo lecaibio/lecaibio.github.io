@@ -1,0 +1,36 @@
+{%- comment -%}
+  Word count and reading time for a post. Not a minima file — ours.
+
+  Usage: {%- include reading-time.html post=post -%}
+
+  Jekyll 3.10's number_of_words is just `input.split.length`, i.e. whitespace splitting.
+  (Jekyll 4 added CJK-aware modes, but GitHub Pages pins 3.10, so they are not available.)
+  Chinese has no spaces, so a Chinese post measures as almost zero words — the 2026-04-28
+  post is 1723 characters but only 109 "words".
+
+  So the language is inferred from characters-per-word rather than from front matter, which
+  keeps it working on any post without a field anyone has to remember to set. Measured over
+  the current posts: the three English ones sit at 4.7, 4.8 and 5.0; the Chinese one at 15.8.
+  The threshold is 9 — roughly the midpoint on a log scale, so a Chinese post can carry a lot
+  of inline English or code before it drops into the English branch, and an English post
+  would need implausibly long words to climb into the Chinese one.
+
+  Speeds: 220 words/min for English, 400 characters/min for Chinese. Both round up, so a
+  short post reads "1 min" rather than "0 min".
+{%- endcomment -%}
+
+{%- assign text = include.post.content | strip_html -%}
+{%- assign words = text | number_of_words -%}
+
+{%- if words > 0 -%}
+  {%- assign chars = text | strip_newlines | replace: " ", "" | size -%}
+  {%- assign ratio = chars | divided_by: words -%}
+
+  {%- if ratio > 9 -%}
+    {%- assign minutes = chars | plus: 399 | divided_by: 400 -%}
+    <span class="post-stats">{{ chars }} 字 · {{ minutes }} 分钟</span>
+  {%- else -%}
+    {%- assign minutes = words | plus: 219 | divided_by: 220 -%}
+    <span class="post-stats">{{ words }} words · {{ minutes }} min read</span>
+  {%- endif -%}
+{%- endif -%}
