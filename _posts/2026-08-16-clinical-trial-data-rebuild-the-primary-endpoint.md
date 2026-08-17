@@ -1,5 +1,5 @@
 ---
-title: "Before Modelling Clinical Trial Data, Rebuild Its Primary Endpoint"
+title: "Before Modeling Clinical Trial Data, Rebuild Its Primary Endpoint"
 description: "A trial's analysis columns are answers to the question that trial asked, not raw measurements. Working through CDISC's public pilot submission to find where those decisions are recorded, and which of them a different question can inherit."
 date: 2026-08-16
 layout: post
@@ -38,7 +38,7 @@ the relationship between them is the point:
   variables that produced it.
 
 That third file is the connection. Given a number in the report, it tells you which dataset to
-open, which rows to select, and which column to analyse. It is a deliberate, long-standing
+open, which rows to select, and which column to analyze. It is a deliberate, long-standing
 piece of engineering, and it is the only reason someone outside a sponsor company can do any of
 what follows.
 
@@ -59,7 +59,7 @@ published as a teaching example. It is not a claim about how any current submiss
 Reading the metadata tells you what a column means. It does not tell you whether you read it
 correctly, and a misreading is silent. So rebuild what the report prints and compare: a rebuilt
 value can only agree if the same subjects were selected, the same record taken per visit,
-missing visits handled the same way, and the same column analysed. Each quantity that matches
+missing visits handled the same way, and the same column analyzed. Each quantity that matches
 rules out readings that would have produced something else.
 
 How strict the check can be depends on what the report gives you to compare against. A rounded
@@ -161,13 +161,13 @@ each deliberate, each recorded, none visible from a column name:
 
 | decision                     | what was chosen                                       | what it does                                                            |
 | ---------------------------- | ----------------------------------------------------- | ----------------------------------------------------------------------- |
-| which subjects               | ITT 254, safety 254, efficacy 234                     | different denominators, and one is defined by post-randomisation events |
+| which subjects               | ITT 254, safety 254, efficacy 234                     | different denominators, and one is defined by post-randomization events |
 | which measurement            | one `AVAL` column, fifteen parameter codes            | wrong code, right column name, meaningless numbers                      |
 | which record per visit       | 257 rows narrowed to 234                              | repeats inside one visit window                                         |
 | missing visits               | 79 of 234 carried forward; the NPI-X endpoint, none   | one endpoint looks complete, another is half absent                     |
 | what a visit label means     | a window, plus carry-forward                          | the timepoint is nominal                                                |
 | direction of the scale       | higher ADAS-Cog is worse                              | coefficients read backwards                                             |
-| when a value became knowable | 19 of 48 subject-level columns are post-randomisation | leakage                                                                 |
+| when a value became knowable | 19 of 48 subject-level columns are post-randomization | leakage                                                                 |
 
 ## Two questions, two tables
 
@@ -225,3 +225,27 @@ _The notebook works through all of this, including the visit-window mechanism ab
 out the feature table and column dictionary:
 [03-adam-traceability](https://github.com/lecaibio/clinical-data-field-notes/tree/main/03-adam-traceability).
 It downloads the package itself and runs in about ten seconds._
+
+<br><br>
+
+---
+
+<small>
+**A note on this piece**
+<br>
+The analysis is entirely on CDISC's public pilot package. No employer data or practice is
+involved.
+<br>
+Every number above comes from that package and the notebook linked at the end, which downloads
+it directly. The reproduced quantities are the ones the report prints; where the report gives a
+rounded value, the agreement is only to the digits printed.
+<br>
+The two ML questions in the last section are worked through on paper. I trained no model and
+report no predictive result. Both figures are mine, since the package ships datasets and
+analysis tables rather than graphics.
+<br>
+AI helped me organize the writing; the analysis, the readings of the metadata, and the
+judgments are mine.
+<br>
+The views here are my own and not affiliated with any employer or organization.
+</small>

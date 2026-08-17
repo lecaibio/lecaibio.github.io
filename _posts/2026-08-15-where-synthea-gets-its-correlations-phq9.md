@@ -3,7 +3,7 @@ title: "Where Synthea Gets Its Correlations: Reading the PHQ-9 Module"
 description: "Synthea's variables are correlated through care protocol, not through biology: good data for learning how care is delivered, bad data for learning what a measurement means."
 date: 2026-08-15
 layout: post
-tags: [pin, clinical ml, synthetic data]
+tags: [clinical ml, synthetic data]
 # Frozen to the path this post was published under. The file was renamed after it went
 # live; without this, the old URL 404s.
 permalink: /2026/08/15/where-synthetic-clinical-data-gets-its-correlations.html
@@ -29,7 +29,7 @@ microdata comes out in two-year cycles. It is a standard source for US prevalenc
 
 **[Synthea](https://github.com/synthetichealth/synthea)** is synthetic: an open-source
 patient generator from MITRE that simulates each patient, in its own phrase, from cradle to
-grave. Its clinical behaviour lives in modules, one JSON state machine per condition or care
+grave. Its clinical behavior lives in modules, one JSON state machine per condition or care
 pathway, deciding what happens to a patient and when. No record belongs to a real person, so
 there are no privacy restrictions, which is why it is common in health IT testing, demos, and
 teaching.
@@ -181,7 +181,7 @@ patients, on exactly the variables you care about.
 | Holds up                                                       | Doesn't hold up                                                     |
 | -------------------------------------------------------------- | ------------------------------------------------------------------- |
 | Learning the conditional logic of ordering: what triggers what | Predicting a biological outcome given a measurement                 |
-| Utilisation and volume forecasting                             | Treating a lab or score as a proxy for patient state                |
+| Utilization and volume forecasting                             | Treating a lab or score as a proxy for patient state                |
 | Coding, billing, claims logic                                  | Learning which measurements matter, or their thresholds             |
 | Workflow and care-pathway simulation                           | Risk models meant to transfer to real patients                      |
 | Format and terminology conformance, FHIR pipeline testing      | Estimating real-world prevalence, effect sizes, associations        |
