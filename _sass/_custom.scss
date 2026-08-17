@@ -325,3 +325,28 @@ hr {
   color: $grey-color-dark;
   font-size: $small-font-size;
 }
+
+/**
+ * Inline code wrapping. A long unbreakable token — a file path, a dotted identifier — is
+ * wider than a phone's content column, and with the default `overflow-wrap: normal` it
+ * widens the whole page rather than wrapping, so the body scrolls sideways under the reader's
+ * thumb. `anywhere` rather than `break-word` because it also shrinks min-content width, which
+ * is what a table cell containing inline code needs.
+ *
+ * `pre > code` is deliberately excluded: minima already gives `pre` its own `overflow-x`, and
+ * a code block that scrolls inside its own box is the behaviour you want.
+ */
+:not(pre) > code {
+  overflow-wrap: anywhere;
+}
+
+/**
+ * Tables. Prose cells wrap on their own, but a wide table on a narrow screen should scroll
+ * inside its own box rather than widening the page.
+ */
+.post-content table {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  overflow-x: auto;
+}

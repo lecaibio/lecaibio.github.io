@@ -194,6 +194,9 @@ text. The rest of the ordering follows from that.
 <small>
 **A note on this piece**
 <br>
+The work and the notes behind this are from June 2026. I finished writing it up and
+published it in August.
+<br>
 This is an experience report rather than a reproducible analysis. The corpus was proprietary and
 is not published, there is no notebook, and the figure is illustrative. The survival proportions
 are real; the exact corpus size is withheld.
