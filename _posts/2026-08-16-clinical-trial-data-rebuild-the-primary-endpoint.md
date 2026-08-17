@@ -3,7 +3,7 @@ title: "Before Modelling Clinical Trial Data, Rebuild Its Primary Endpoint"
 description: "A trial's analysis columns are answers to the question that trial asked, not raw measurements. Working through CDISC's public pilot submission to find where those decisions are recorded, and which of them a different question can inherit."
 date: 2026-08-16
 layout: post
-tags: [clinical ml, clinical trials, reproducibility]
+tags: [pin, clinical ml, reproducibility]
 ---
 
 Imagine someone hands you a clinical trial dataset. One row per subject, forty-eight columns,
@@ -74,14 +74,14 @@ report gives a dose-response p-value of 0.245.
 
 Rebuilt from the analysis datasets, against Table 14-3.01 as printed:
 
-| | report | rebuilt |
-|---|---|---|
-| subjects per arm, placebo / low / high | 79 / 81 / 74 | 79 / 81 / 74 |
-| mean change from baseline | 2.5 / 2.0 / 1.5 | 2.54 / 2.00 / 1.47 |
-| **p-value, dose response** | **0.245** | **0.2447** |
-| low minus placebo, difference (SE) | −0.5 (0.82) | −0.47 (0.82) |
-| high minus placebo | −1.0 (0.84) | −1.01 (0.84) |
-| high minus low | −0.5 (0.84) | −0.54 (0.84) |
+|                                        | report          | rebuilt            |
+| -------------------------------------- | --------------- | ------------------ |
+| subjects per arm, placebo / low / high | 79 / 81 / 74    | 79 / 81 / 74       |
+| mean change from baseline              | 2.5 / 2.0 / 1.5 | 2.54 / 2.00 / 1.47 |
+| **p-value, dose response**             | **0.245**       | **0.2447**         |
+| low minus placebo, difference (SE)     | −0.5 (0.82)     | −0.47 (0.82)       |
+| high minus placebo                     | −1.0 (0.84)     | −1.01 (0.84)       |
+| high minus low                         | −0.5 (0.84)     | −0.54 (0.84)       |
 
 Getting there took the analysis metadata, the report's footnotes and its printed statistical
 output, read together. The parameter code is given in the metadata's parameter list. The stored
@@ -159,15 +159,15 @@ this measured", which is a different question, answered by the column next to it
 Once you have that, the same shape is everywhere in the package. Each of these is a decision,
 each deliberate, each recorded, none visible from a column name:
 
-| decision | what was chosen | what it does |
-|---|---|---|
-| which subjects | ITT 254, safety 254, efficacy 234 | different denominators, and one is defined by post-randomisation events |
-| which measurement | one `AVAL` column, fifteen parameter codes | wrong code, right column name, meaningless numbers |
-| which record per visit | 257 rows narrowed to 234 | repeats inside one visit window |
-| missing visits | 79 of 234 carried forward; the NPI-X endpoint, none | one endpoint looks complete, another is half absent |
-| what a visit label means | a window, plus carry-forward | the timepoint is nominal |
-| direction of the scale | higher ADAS-Cog is worse | coefficients read backwards |
-| when a value became knowable | 19 of 48 subject-level columns are post-randomisation | leakage |
+| decision                     | what was chosen                                       | what it does                                                            |
+| ---------------------------- | ----------------------------------------------------- | ----------------------------------------------------------------------- |
+| which subjects               | ITT 254, safety 254, efficacy 234                     | different denominators, and one is defined by post-randomisation events |
+| which measurement            | one `AVAL` column, fifteen parameter codes            | wrong code, right column name, meaningless numbers                      |
+| which record per visit       | 257 rows narrowed to 234                              | repeats inside one visit window                                         |
+| missing visits               | 79 of 234 carried forward; the NPI-X endpoint, none   | one endpoint looks complete, another is half absent                     |
+| what a visit label means     | a window, plus carry-forward                          | the timepoint is nominal                                                |
+| direction of the scale       | higher ADAS-Cog is worse                              | coefficients read backwards                                             |
+| when a value became knowable | 19 of 48 subject-level columns are post-randomisation | leakage                                                                 |
 
 ## Two questions, two tables
 
@@ -185,7 +185,7 @@ It also inherits the carry-forward: for 79 of those subjects the "six month" out
 measurement taken earlier, so the model is partly learning about people who left.
 
 **Who leaves the study early?** The target is discontinuation before Week 24, and now everything
-inverts. `TRTDUR` and `COMP24FL` were leakage in the first question; here one of them *is* the
+inverts. `TRTDUR` and `COMP24FL` were leakage in the first question; here one of them _is_ the
 target. The Week 8 assessment was an outcome in the first question; here it is a legitimate
 feature, because all 234 subjects have an observed Week 8 and all 116 of the eventual leavers
 were still present for it. And the carry-forward that was acceptable in the first question is
@@ -221,7 +221,7 @@ let it tell me which of my columns were honest.
 
 ---
 
-*The notebook works through all of this, including the visit-window mechanism above, and writes
+_The notebook works through all of this, including the visit-window mechanism above, and writes
 out the feature table and column dictionary:
 [03-adam-traceability](https://github.com/lecaibio/clinical-data-field-notes/tree/main/03-adam-traceability).
-It downloads the package itself and runs in about ten seconds.*
+It downloads the package itself and runs in about ten seconds._
