@@ -17,10 +17,10 @@ names will still line up, because lining up names is what the standard is for. W
 underneath them was decided one protocol at a time.
 
 **The short version:** those decisions are written down, every one of them, and none of them
-travel with the table. Which subjects count. Which record of a repeated measurement counts.
-What happens when someone stops turning up. What a visit label means. Reproducing the trial's
-own published answer checks that you have read them as they were meant, and only then can you
-tell which your question inherits and which you have to make again.
+travel with the table: which subjects count, which record of a repeated measurement counts,
+what happens to the people who stop turning up. Reproducing the trial's own published answer
+checks that you have read them as they were meant, and only then can you tell which your
+question inherits and which you have to make again.
 
 ## A CDISC submission: study report, SDTM and ADaM datasets, and define.xml linking them
 
@@ -46,6 +46,11 @@ Laid out, with what this package actually holds at each step:
 
 ![How the layers of the submission connect, with counts](/assets/images/clinical_field_notes/adam-how-it-connects.png)
 
+**Figure 1.** The layers of the submission, with the counts this package actually holds.
+Drawn by the [notebook](https://github.com/lecaibio/clinical-data-field-notes/tree/main/03-adam-traceability),
+which downloads the package and counts them.
+{: .figure-caption}
+
 Each layer is derived from the one above it, and narrows as it goes. The questionnaire domain
 alone holds 121,749 collected rows; the analysis dataset built from it holds 12,463; the set
 that feeds the primary endpoint is 234, one per subject in the efficacy population. `define.xml`
@@ -62,17 +67,13 @@ value can only agree if the same subjects were selected, the same record taken p
 missing visits handled the same way, and the same column analyzed. Each quantity that matches
 rules out readings that would have produced something else.
 
-How strict the check can be depends on what the report gives you to compare against. A rounded
-p-value is three digits of agreement. The table around it adds counts, means, standard errors
-and confidence limits. The statistical output printed near the back adds sums of squares to six
-decimal places and adjusted means to eight. This package carries all three levels, and the
-sections below work through them.
-
 The starting point is the study's primary endpoint: change from baseline in ADAS-Cog (11) at
 Week 24. Higher is worse on that scale, so a positive change means the subject declined. The
 report gives a dose-response p-value of 0.245.
 
-Rebuilt from the analysis datasets, against Table 14-3.01 as printed:
+**Table 1.** The primary endpoint rebuilt from the analysis datasets, against Table 14-3.01
+as printed.
+{: .table-caption}
 
 |                                        | report          | rebuilt            |
 | -------------------------------------- | --------------- | ------------------ |
@@ -83,18 +84,23 @@ Rebuilt from the analysis datasets, against Table 14-3.01 as printed:
 | high minus placebo                     | −1.0 (0.84)     | −1.01 (0.84)       |
 | high minus low                         | −0.5 (0.84)     | −0.54 (0.84)       |
 
+That table is the weakest of the three checks this package supports. A rounded p-value is three
+digits of agreement; the table around it adds counts, means, standard errors and confidence
+limits; the statistical output printed near the back adds sums of squares to six decimal places
+and adjusted means to eight. The sections below work through all three.
+
 Getting there took the analysis metadata, the report's footnotes and its printed statistical
 output, read together. The parameter code is given in the metadata's parameter list. The stored
 visit label carries padding that has to be trimmed before a string comparison matches. The model
 specification, including a baseline covariate, is stated in the table's footnote and visible in
 the statistical output printed near the back of the report.
 
-Two of those details can be measured directly. Fitting the model from the analysis metadata
-alone returns 0.2532; fitting it with the baseline covariate stated in the footnote returns
-0.2447, which is the printed 0.245. The adjusted-means statement specifies that the site term be
-averaged by the number of subjects each site contributed rather than weighting all eleven
-equally; applied that way the adjusted means match the printed values to eight decimal places,
-and weighted equally they differ in the second decimal.
+Two decisions in there change the printed answer measurably. Fitting the model from the analysis
+metadata alone returns 0.2532; fitting it with the baseline covariate stated in the footnote
+returns 0.2447, which is the printed 0.245. And the adjusted-means statement specifies that the
+site term be averaged by the number of subjects each site contributed rather than weighting all
+eleven equally; applied that way the adjusted means match the printed values to eight decimal
+places, and weighted equally they differ in the second decimal.
 
 **Neither partial specification raises an error. Both return a number.**
 
@@ -119,12 +125,19 @@ table rather than the graphics, so the picture is built rather than reproduced.
 
 ![ADAS-Cog change from baseline over time, by arm](/assets/images/clinical_field_notes/adam-mmrm-trajectory.png)
 
+**Figure 2.** ADAS-Cog (11) over time, from the repeated-measures model refitted to the
+analysis datasets. The numbers are the report's; the figure is not. No plot like this appears
+in the package, which gives the analysis as a table of over-time means. Refitted and drawn by
+the [notebook](https://github.com/lecaibio/clinical-data-field-notes/tree/main/03-adam-traceability),
+so it can be rebuilt from the downloaded files in about ten seconds.
+{: .figure-caption}
+
 Reading it, for anyone whose instincts come from elsewhere:
 
 All three curves rise, because the disease is progressive and the scale measures deficit. A
 trial like this never asks whether subjects improve, only whether the treated arms climb more
-slowly than placebo. I had arrived with a "did the patient get better" frame, under which the
-figure appears to say the drug failed and so did the placebo, which is not what it says.
+slowly than placebo. Read as a question about improvement, the figure says the drug failed and
+so did the placebo. That is not the question it answers.
 
 At Week 24 both active arms sit below placebo, about a point less worsening, and none of it
 reaches significance: treatment p = 0.8184 in the model, 0.245 for dose response at Week 24,
@@ -138,26 +151,29 @@ per visit nor the reason people left is anywhere on the plot.
 
 ## What "Week 24" selects, and why a label belongs to its question
 
-<mark>A column in an analysis dataset is not a measurement; it is an answer to a question, and
-its name describes the answer.</mark>
-
 The analysis selects `AVISIT == "Week 24"`, and the numbers matched, so the filter is correct.
-Of the 234 rows it selects, **115 were recorded at a visit called Week 24.** The rest come from
-Week 2, Week 4, Week 6, Week 8, Week 12, Week 16, Week 20, a visit called RETRIEVAL, and one
-called AMBUL ECG REMOVAL.
+Of the 234 rows it selects, **115 were recorded at a visit called Week 24.** Another 40 were
+recorded at some other visit, and 79 were not recorded after Week 8 at all.
 
-Two mechanisms put them there, and the dataset states both, in columns sitting beside the ones
-I was reading. An analysis window: `AWRANGE` says `>140`, so any assessment on study day 141 or
-later is the Week 24 analysis point whatever the visit was called. And carry-forward: 79
-subjects stopped coming, so their last observed value stands in.
+Two mechanisms account for that split, and the dataset states both, in columns sitting beside
+the ones being read. An analysis window: `AWRANGE` says `>140`, so any assessment on study day
+141 or later is the Week 24 analysis point whatever the visit was called, which is how a visit
+named RETRIEVAL contributes 37 of those 40. And carry-forward: 79 subjects stopped coming, so
+their last observed value stands in, all of it measured on day 140 or earlier.
 
 `AVISIT` means precisely what it is defined to mean: which analysis timepoint this row
 represents. Every one of those rows genuinely is that subject's Week 24 analysis value, and for
 a carry-forward analysis that is the entire point. It only misleads if you read it as "when was
 this measured", which is a different question, answered by the column next to it.
 
+**A column in an analysis dataset is an answer to a question, and its name describes the
+answer rather than the measurement.**
+
 Once you have that, the same shape is everywhere in the package. Each of these is a decision,
-each deliberate, each recorded, none visible from a column name:
+each deliberate, each recorded, none visible from a column name.
+
+**Table 2.** Decisions taken when the analysis datasets were built, and what each one changes.
+{: .table-caption}
 
 | decision                     | what was chosen                                       | what it does                                                            |
 | ---------------------------- | ----------------------------------------------------- | ----------------------------------------------------------------------- |
@@ -172,8 +188,8 @@ each deliberate, each recorded, none visible from a column name:
 ## Two questions, two tables
 
 The trial demonstrates this before any ML reader arrives. It asked two questions about the same
-endpoint, and needed two tables to answer them: **the primary endpoint analysis runs on 234
-rows, one per subject with values carried forward, and the MMRM runs on 539, observed only.**
+endpoint, and needed two tables to answer them: the primary endpoint analysis runs on 234
+rows, one per subject with values carried forward, and the MMRM runs on 539, observed only.
 Same study, same column, same six months, two questions, two datasets.
 
 Now take two questions an ML practitioner might bring to it.
@@ -191,25 +207,24 @@ feature, because all 234 subjects have an observed Week 8 and all 116 of the eve
 were still present for it. And the carry-forward that was acceptable in the first question is
 now fatal, since the imputed value is a direct function of the thing being predicted.
 
-Same package. Two questions. Two different tables, two different row counts, and a column that
-is poison in one and the label in the other.
+One column, `TRTDUR`, is leakage in the first question and the label in the second. That is why
+the sorting into technical, result and feature is worth having, and why the sort belongs to a
+column and a question together. What the metadata gives you is timing and derivation. Your
+question decides the role, and the trial cannot decide it for you, because it was busy answering
+its own.
 
-This is why the sorting I did into technical, result and feature is worth having, and why
-**the sort is not a property of the columns but of a column and a question together.** What the
-metadata gives you is timing and derivation. Your question decides the role, and the trial
-cannot decide it for you, because it was busy answering its own.
+Which is the shape of the pooling problem from the top of this post. Five trials give you five
+sets of these decisions, and the column names will agree regardless.
 
 ## Take-aways before you model clinical trial data
 
-- **The data was shaped by a question, and the shape does not travel with the table.** Which
-  subjects, which record, what a label means, what happens to people who left.
-- **Reproducing the published results tests your reading of those decisions.** The more
+- **Reproducing the published results tests your reading of the trial's decisions.** The more
   quantities match, and to more digits, the fewer wrong readings survive.
 - **A partial reading returns a number, not an error.** The specification is spread across the
   metadata, the footnotes and the printed output, and using part of it still computes.
 - **A label can be correct and still not mean what you assumed.** "Week 24" is a window plus a
   carry-forward rule, so only 115 of the 234 rows were measured at Week 24.
-- **There is no context-free feature table.** Two questions on one study need two tables. Five
+- **There is no context-free feature table.** Two questions on one study need two tables; five
   studies pooled need five sets of decisions checked before the columns can be stacked.
 
 The table at the end is the artifact, but the trace back is the method, and the method is

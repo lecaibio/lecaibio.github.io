@@ -342,11 +342,54 @@ hr {
 
 /**
  * Tables. Prose cells wrap on their own, but a wide table on a narrow screen should scroll
- * inside its own box rather than widening the page.
+ * inside its own box rather than widening the page. Centred rather than flush left, since
+ * `width: fit-content` otherwise pins a narrow table to the left margin.
  */
 .post-content table {
   display: block;
   width: fit-content;
   max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
   overflow-x: auto;
+}
+
+/**
+ * Figure captions. A paragraph tagged `{: .figure-caption}` immediately after an image:
+ * smaller, centred, and pulled up tight against the figure so the two read as one unit.
+ * The negative top margin cancels the image's own bottom margin, which is sized for a
+ * figure standing on its own.
+ */
+.post-content .figure-caption {
+  margin: -1.05em auto 2.3em;
+  max-width: 100%;
+  font-size: $base-font-size * 0.82;
+  line-height: 1.34;
+  color: $grey-color;
+  text-align: center;
+}
+
+/**
+ * A hairline round the plate itself, so a figure reads as a contained block. Held to the text
+ * column like everything else on the page, so it lines up with the prose above and below it
+ * rather than reaching past them.
+ */
+.post-content p > img {
+  max-width: 100%;
+  border: 1px solid #e8e6e0;
+  padding: 12px;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+/**
+ * Table captions sit above the table they describe, in the same register as figure captions.
+ */
+.post-content .table-caption {
+  margin: 2em auto 0.6em;
+  max-width: 100%;
+  font-size: $base-font-size * 0.82;
+  line-height: 1.34;
+  color: $grey-color;
+  text-align: center;
 }
