@@ -6,7 +6,7 @@ layout: post
 tags: [industry, diagnostics]
 ---
 
-In 2021 my then-boss asked me to look into a cannabis plant-sex qPCR kit. It was a fair thing to
+In 2021 I was asked to look into a cannabis plant-sex qPCR kit. It was a fair thing to
 ask. We already sold qPCR kits, hemp was booming, and the biology looked like a homework
 problem.
 
@@ -57,23 +57,24 @@ feminized seed is made, and the industry has done it for decades without knowing
 ## My three reasons were about the sample and the biology, not the market
 
 Most of the case for it was right. Hemp had been legal since the 2018 Farm Bill, growers were
-losing real money to a problem with a price on it, and there was a Y chromosome to go find. My
-then-boss came out of software engineering, and from that seat the work reads as a configuration
-change: point the same instrument at a new target, design primers, validate, ship. Three of
-those four steps really are the same. The one the list leaves out is getting clean DNA out of
-the sample, and that is the one that does not carry over from one organism to another.
+losing real money to a problem with a price on it, and there was a Y chromosome to go find. From
+outside a wet lab the work reads as a configuration change: point the same instrument at a new
+target, design primers, validate, ship. Three of those four steps really are the same. The one
+the list leaves out is getting clean DNA out of the sample, and that is the one that does not
+carry over from one organism to another.
 
 My smallest objection was capacity. I was the only PhD in the company, and in 2021 that meant
-the COVID assays that were paying our bills, the beer kits, and the regulatory paperwork that
-came with both. Bringing up a new crop species takes months of doing that instead of the other
-work, and we had nobody to hand the other work to while I did it.
+the COVID assays that were paying our bills, the existing product lines, and the regulatory
+paperwork that came with all of it. Bringing up a new crop species takes months of doing that
+instead of the other work, and we had nobody to hand the other work to while I did it.
 
-The second was the sample. Our kits ran on saliva and on beer culture, and neither of those is
-an easy matrix to work in. I came from a plant molecular lab and knew what plant tissue does to
-a polymerase. Cannabis leaf is full of polyphenols, polysaccharides and terpenes, and our format
-was a fast direct-lysis workflow that traded cleanup for speed. New primers were the easy part.
-Getting a one-step kit to hold up on macerated leaf, across cultivars and growth stages and
-whatever the grower's hands had been in, is a sample-prep program, not a product line extension.
+The second was the sample. Our kits ran on matrices that were nothing like plant tissue, and
+none of them had been easy to get working. I came from a plant molecular lab and knew what plant
+tissue does to a polymerase. Cannabis leaf is full of polyphenols, polysaccharides and terpenes,
+and our format was a fast direct-lysis workflow that traded cleanup for speed. New primers were
+the easy part. Getting a one-step kit to hold up on macerated leaf, across cultivars and growth
+stages and whatever the grower's hands had been in, is a sample-prep program, not a product line
+extension.
 
 The third was that the biology did not close. Nothing I read explained the exceptions above, and
 I could not find anyone who claimed to. I did not know what they meant, and it made me cautious
@@ -150,9 +151,9 @@ target, and now that the pathway has a name it is a more tractable one.
 ## A diagnostic survives where the customer cannot breed the problem away
 
 <mark>A diagnostic is worth the cost of the uncertainty it removes, so anyone who removes that
-uncertainty upstream takes the value to zero no matter how good the assay is.</mark> What matters is
-who controls the risk. Cannabis plant sex sat entirely inside the seed supplier's control, and
-once it was worth their while to fix it there, the test had nothing left to price.
+uncertainty upstream takes the value to zero no matter how good the assay is.</mark> What
+matters is who controls the risk. Cannabis plant sex sat entirely inside the seed supplier's
+control, and once it was worth their while to fix it there, the test had nothing left to price.
 
 The contrast is sitting in the same catalogs. Hop latent viroid can cost half the cannabinoid
 content of an infected plant, it spreads on cuttings and shared tools, and no breeding program
